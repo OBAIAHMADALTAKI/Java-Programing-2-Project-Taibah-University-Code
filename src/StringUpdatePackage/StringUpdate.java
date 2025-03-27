@@ -1,6 +1,7 @@
 package StringUpdatePackage;
 
 public class StringUpdate {
-    //check and test
-   
+    void checkAndTest(){
+        System.out.println("Check");
+    }
 }
