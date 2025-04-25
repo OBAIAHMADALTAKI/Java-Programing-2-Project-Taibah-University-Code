@@ -6,92 +6,174 @@ public class AllOperations extends StringUpdate {
     // المتغير الرئيسي لتخزين النص وتعديله
     private StringBuilder builder = new StringBuilder();
 
-    // دالة لإضافة نص في نهاية النص الحالي
+    // 1. إضافة نص في نهاية النص الحالي
     public String insertLast(String element) {
-        builder.append(element); // نضيف النص مباشرة في النهاية
-        return builder.toString(); // نرجع النص النهائي بعد التعديل
+        builder.append(element);
+        return builder.toString();
     }
 
-    // دالة لإضافة نص قبل آخر كلمة في النص الحالي
+    // 2. إضافة نص قبل آخر كلمة في النص الحالي
     public String insertBeforeLast(String element) {
         if (builder.length() == 0) {
-            // إذا النص فاضي نرجع تنبيه للمستخدم
             return "The text is empty. Add text first using insert last.";
         }
-
-        // تنظيف الفراغات من البداية والنهاية
         String cleaned = builder.toString().trim();
-        builder = new StringBuilder(cleaned); // إعادة بناء النص بدون الفراغات الخارجية
-
-        // نحصل على موقع آخر فراغ (قبل الكلمة الأخيرة)
+        builder = new StringBuilder(cleaned);
         int lastSpaceIndex = builder.lastIndexOf(" ");
         if (lastSpaceIndex == -1) {
-            // إذا فيه كلمة وحدة فقط، نضيف الكلمة في البداية
             builder.insert(0, element + " ");
         } else {
-            // نضيف الكلمة قبل آخر كلمة
             builder.insert(lastSpaceIndex, element + " ");
         }
-
-        return builder.toString(); // نرجع النص المعدل
+        return builder.toString();
     }
 
-    // دالة لإضافة كلمة قبل وآخرى بعد آخر كلمة في النص الحالي
-    public String insertBeforeAndAfterLast(String element) {
+    // 3. إضافة كلمة قبل أول كلمة وآخرى بعد آخر كلمة
+    public String insertBeforeFirstAndAfterLast(String element) {
         if (builder.length() == 0) {
             return "The text is empty. Add text first using insert last.";
         }
-
-        // تنظيف النص من الفراغات الزائدة من الأطراف
         String cleaned = builder.toString().trim();
         builder = new StringBuilder(cleaned);
-
-        // تقسيم الإدخال على الفاصلة (يدعم وجود فراغات حول الفاصلة)
         String[] parts = element.split("\\s*,\\s*");
-
-        String before;
-        String after;
-
-        if (parts.length == 1) {
-            // لو دخل كلمة وحدة فقط، نستخدمها قبل وبعد
-            before = parts[0].trim();
-            after = parts[0].trim();
-        } else if (parts.length == 2) {
-            // لو دخل كلمتين، الأولى قبل، والثانية بعد
-            before = parts[0].trim();
-            after = parts[1].trim();
-        } else {
-            // لو دخل أكثر من كلمتين أو بشكل غير صحيح
-            return "Please enter either a single word or two words separated by a comma, e.g., cool or cool,again.";
-        }
-
-        // نحصل على موقع آخر فراغ (قبل الكلمة الأخيرة)
-        int lastSpaceIndex = builder.lastIndexOf(" ");
-
-        if (lastSpaceIndex == -1) {
-            // إذا فيه كلمة وحدة فقط
+        String before = parts[0].trim();
+        String after = (parts.length == 2) ? parts[1].trim() : before;
+        int firstSpaceIndex = builder.indexOf(" ");
+        if (firstSpaceIndex == -1) {
             builder.insert(0, before + " ");
             builder.append(" " + after);
         } else {
-            // نضيف الكلمة قبل وبعد الكلمة الأخيرة
-            builder.insert(lastSpaceIndex, before + " ");
+            builder.insert(0, before + " ");
             builder.append(" " + after);
         }
-
-        return builder.toString(); // نرجع النص النهائي
+        return builder.toString();
     }
 
-    // دالة لإضافة كلمة في بداية النص الحالي
+    // 4. إضافة كلمة في بداية النص الحالي
     public String insertFirst(String element) {
-        // تنظيف النص من الفراغات الزائدة من البداية والنهاية
         String cleaned = builder.toString().trim();
-
-        // نعيد بناء النص من جديد
         builder = new StringBuilder();
-
-        // نضيف الكلمة الجديدة في البداية ثم النص السابق
         builder.append(element).append(" ").append(cleaned);
+        return builder.toString();
+    }
 
-        return builder.toString(); // نرجع النص المعدل
+    // 5. إضافة كلمة بعد أول كلمة
+    public String insertAfterFirst(String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String cleaned = builder.toString().trim();
+        builder = new StringBuilder(cleaned);
+        String cleanedE = element.trim();
+        int firstSpaceIndex = builder.indexOf(" ");
+        if (firstSpaceIndex == -1) {
+            builder.append(" " + cleanedE);
+        } else {
+            builder.insert(firstSpaceIndex + 1, cleanedE + " ");
+        }
+        return builder.toString();
+    }
+
+    // 6. إضافة كلمة قبل وبعد أول كلمة
+    public String insertBeforeAndAfterFirst(String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String cleaned = builder.toString().trim();
+        builder = new StringBuilder(cleaned);
+        String[] parts = element.split("\\s*,\\s*");
+        String before = parts[0].trim();
+        String after = (parts.length == 2) ? parts[1].trim() : before;
+        int firstSpaceIndex = builder.indexOf(" ");
+        if (firstSpaceIndex == -1) {
+            builder.insert(0, before + " ");
+            builder.append(" " + after);
+        } else {
+            builder.insert(0, before + " ");
+            firstSpaceIndex = builder.indexOf(" ", before.length() + 1);
+            builder.insert(firstSpaceIndex + 1, after + " ");
+        }
+        return builder.toString();
+    }
+
+    // 7. إضافة عنصر بعد أول ظهور لقيمة معينة
+    public String insertAfterElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String content = builder.toString();
+        int index = content.indexOf(value);
+        if (index == -1) {
+            return content;
+        }
+        StringBuilder result = new StringBuilder();
+        result.append(content.substring(0, index + value.length()));
+        result.append(element);
+        result.append(content.substring(index + value.length()));
+        builder = result;
+        return builder.toString();
+    }
+
+    // 8. إضافة عنصر بعد كل ظهور لقيمة معينة
+    public String insertAfterAllElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String content = builder.toString();
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < content.length()) {
+            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
+                result.append(value).append(element);
+                i += value.length();
+            } else {
+                result.append(content.charAt(i));
+                i++;
+            }
+        }
+        builder = result;
+        return builder.toString();
+    }
+
+    // 9. إضافة عنصر قبل كل ظهور لقيمة معينة
+    public String insertBeforeAllElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String content = builder.toString();
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < content.length()) {
+            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
+                result.append(element).append(value);
+                i += value.length();
+            } else {
+                result.append(content.charAt(i));
+                i++;
+            }
+        }
+        builder = result;
+        return builder.toString();
+    }
+
+    // 10. إضافة عنصر قبل وبعد كل ظهور لقيمة معينة
+    public String insertBeforeAndAfterAllElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insert last.";
+        }
+        String content = builder.toString();
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < content.length()) {
+            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
+                result.append(element).append(value).append(element);
+                i += value.length();
+            } else {
+                result.append(content.charAt(i));
+                i++;
+            }
+        }
+        builder = result;
+        return builder.toString();
     }
 }
