@@ -3,7 +3,6 @@ package FirstStage;
 // الكلاس الأساسي يحتوي على كل العمليات الخاصة بالتعديل على النص
 public class AllOperations extends StringUpdate {
 
-    // المتغير الرئيسي لتخزين النص وتعديله
     private StringBuilder builder = new StringBuilder();
 
     // 1. إضافة نص في نهاية النص الحالي
@@ -15,7 +14,7 @@ public class AllOperations extends StringUpdate {
     // 2. إضافة نص قبل آخر كلمة في النص الحالي
     public String insertBeforeLast(String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
         String cleaned = builder.toString().trim();
         builder = new StringBuilder(cleaned);
@@ -28,23 +27,20 @@ public class AllOperations extends StringUpdate {
         return builder.toString();
     }
 
-    // 3. إضافة كلمة قبل أول كلمة وآخرى بعد آخر كلمة
-    public String insertBeforeFirstAndAfterLast(String element) {
+    // 3. إضافة كلمة قبل وآخر كلمة في النص
+    public String insertBeforeAndAfterLast(String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
         String cleaned = builder.toString().trim();
         builder = new StringBuilder(cleaned);
-        String[] parts = element.split("\\s*,\\s*");
-        String before = parts[0].trim();
-        String after = (parts.length == 2) ? parts[1].trim() : before;
-        int firstSpaceIndex = builder.indexOf(" ");
-        if (firstSpaceIndex == -1) {
-            builder.insert(0, before + " ");
-            builder.append(" " + after);
+        int lastSpaceIndex = builder.lastIndexOf(" ");
+        if (lastSpaceIndex == -1) {
+            builder.insert(0, element + " ");
+            builder.append(" " + element);
         } else {
-            builder.insert(0, before + " ");
-            builder.append(" " + after);
+            builder.insert(lastSpaceIndex, element);
+            builder.append(" " + element);
         }
         return builder.toString();
     }
@@ -60,16 +56,15 @@ public class AllOperations extends StringUpdate {
     // 5. إضافة كلمة بعد أول كلمة
     public String insertAfterFirst(String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
         String cleaned = builder.toString().trim();
         builder = new StringBuilder(cleaned);
-        String cleanedE = element.trim();
         int firstSpaceIndex = builder.indexOf(" ");
         if (firstSpaceIndex == -1) {
-            builder.append(" " + cleanedE);
+            builder.append(" ").append(element);
         } else {
-            builder.insert(firstSpaceIndex + 1, cleanedE + " ");
+            builder.insert(firstSpaceIndex + 1, element + " ");
         }
         return builder.toString();
     }
@@ -77,7 +72,7 @@ public class AllOperations extends StringUpdate {
     // 6. إضافة كلمة قبل وبعد أول كلمة
     public String insertBeforeAndAfterFirst(String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
         String cleaned = builder.toString().trim();
         builder = new StringBuilder(cleaned);
@@ -99,81 +94,91 @@ public class AllOperations extends StringUpdate {
     // 7. إضافة عنصر بعد أول ظهور لقيمة معينة
     public String insertAfterElement(String value, String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
         String content = builder.toString();
         int index = content.indexOf(value);
         if (index == -1) {
             return content;
         }
-        StringBuilder result = new StringBuilder();
-        result.append(content.substring(0, index + value.length()));
-        result.append(element);
-        result.append(content.substring(index + value.length()));
-        builder = result;
+        builder = new StringBuilder();
+        builder.append(content, 0, index + value.length());
+        builder.append(element);
+        builder.append(content.substring(index + value.length()));
         return builder.toString();
     }
 
     // 8. إضافة عنصر بعد كل ظهور لقيمة معينة
     public String insertAfterAllElement(String value, String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        String content = builder.toString();
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        while (i < content.length()) {
-            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
-                result.append(value).append(element);
-                i += value.length();
-            } else {
-                result.append(content.charAt(i));
-                i++;
-            }
+        return builder.toString().replace(value, value + element);
+    }
+
+    // 9. إضافة عنصر قبل أول ظهور لقيمة معينة
+    public String insertBeforeElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        builder = result;
+        int index = builder.indexOf(value);
+        if (index != -1) {
+            builder.insert(index, element);
+        }
         return builder.toString();
     }
 
-    // 9. إضافة عنصر قبل كل ظهور لقيمة معينة
+    // 10. إضافة عنصر قبل كل ظهور لقيمة معينة
     public String insertBeforeAllElement(String value, String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        String content = builder.toString();
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        while (i < content.length()) {
-            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
-                result.append(element).append(value);
-                i += value.length();
-            } else {
-                result.append(content.charAt(i));
-                i++;
-            }
+        return builder.toString().replace(value, element + value);
+    }
+
+    // 11. إضافة عنصر قبل وبعد أول ظهور لقيمة معينة
+    public String insertBeforeAndAfterElement(String value, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        builder = result;
+        int index = builder.indexOf(value);
+        if (index != -1) {
+            builder.insert(index, element);
+            builder.insert(index + element.length() + value.length(), element);
+        }
         return builder.toString();
     }
 
-    // 10. إضافة عنصر قبل وبعد كل ظهور لقيمة معينة
+    // 12. إضافة عنصر قبل وبعد كل ظهور لقيمة معينة
     public String insertBeforeAndAfterAllElement(String value, String element) {
         if (builder.length() == 0) {
-            return "The text is empty. Add text first using insert last.";
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        String content = builder.toString();
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        while (i < content.length()) {
-            if (i + value.length() <= content.length() && content.substring(i, i + value.length()).equals(value)) {
-                result.append(element).append(value).append(element);
-                i += value.length();
-            } else {
-                result.append(content.charAt(i));
-                i++;
-            }
+        return builder.toString().replace(value, element + value + element);
+    }
+
+    // 13. إدراج عنصر في موقع معين من البداية
+    public String insertElementWithStartingFirstIndex(int index, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insertFirst or insertLast.";
         }
-        builder = result;
+        if (index < 0 || index > builder.length()) {
+            return "Invalid index.";
+        }
+        builder.insert(index, element);
+        return builder.toString();
+    }
+
+    // 14. إدراج عنصر في موقع معين من النهاية
+    public String insertElementWithStartingLastIndex(int index, String element) {
+        if (builder.length() == 0) {
+            return "The text is empty. Add text first using insertFirst or insertLast.";
+        }
+        int position = builder.length() - index;
+        if (position < 0 || position > builder.length()) {
+            return "Invalid index.";
+        }
+        builder.insert(position, element);
         return builder.toString();
     }
 }
