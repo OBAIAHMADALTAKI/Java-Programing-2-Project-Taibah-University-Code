@@ -1,9 +1,10 @@
 package FirstStage;
 
-public class StringUpdate {
+public abstract class StringUpdate implements SaveFile {
     private int Choose = 0;
     private long CapacitySize = 10;
-    
+    private static int NumberOfOperations = 0 ;
+
     public StringUpdate(){}
     
     public StringUpdate(long CapacitySize){
@@ -21,7 +22,20 @@ public class StringUpdate {
     public long getCapacitySize(){
         return CapacitySize;
     }
+    public void setNumberOfOperations(int NumberOfOperations){
+        this.NumberOfOperations = NumberOfOperations;
+    }
+    public int getNumberOfOperations(){
+        return NumberOfOperations;
+    }
+    @Override
+    public void WriteFile(){}
+
+    @Override
+    public void ReadFile(){}
+
     public void PrintList(){
+        System.out.println("Choose an insertion operation:");
         System.out.println(" 1. Insert Last ");
         System.out.println(" 2. Insert Before Last");
         System.out.println(" 3. Insert Before & After Last");
@@ -36,6 +50,8 @@ public class StringUpdate {
         System.out.println("12. Insert Before & After All Element");
         System.out.println("13. Insert Element With String Frist Index");
         System.out.println("14. Insert Element With Starting Last Index");
+        System.out.println("0. Back to operations menu");
+        System.out.println("Your choice: ");
     }
     
 }
