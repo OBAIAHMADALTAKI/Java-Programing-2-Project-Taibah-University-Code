@@ -190,7 +190,7 @@ public class AllOperations extends StringUpdate {
     public String DeleteStartsIndexToLast(int start, int end){
     	
     	if (start > end) {
-            return "The first number must be smaller than the second number.."; // Handle invalid range: startChar appears after endChar
+            return "The first number must be smaller than the second number.."; // To make sure the first index is smaller than the second one
         }
     	if (start <= text.length() && start > 0 && end <= text.length() && end > 0) {
             return text.delete(start-1, end).toString();
