@@ -157,11 +157,11 @@ public class AllOperations extends StringUpdate {
             index += element.length(); // Move past the found element to avoid infinite loops
         }
 
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(); //prints all the elemets saved in the array
         for (int i = 0; i < foundElements.size(); i++) {
         	result.append(foundElements.get(i));
             if (i < foundElements.size() - 1) {
-            	result.append(" ");
+            	result.append(" "); // adds a space after each element
             }
         }
 
