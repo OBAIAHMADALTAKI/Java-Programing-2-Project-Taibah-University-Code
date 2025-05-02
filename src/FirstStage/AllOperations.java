@@ -205,10 +205,10 @@ public class AllOperations extends StringUpdate {
     	String start = String.valueOf(c1);
         String end = String.valueOf(c2);
         
-        //takse the index of the starting and ending char
+        //takes the index of the starting and ending char
     	int startIndex = text.indexOf(start);
         int endIndex = text.indexOf(end);
-        //Cheks if both chars exist
+        //Checks if both chars exist
         if (startIndex == -1 && endIndex == -1) {
             return "The two chars doesn't exist";
         } else if (startIndex == -1) {
@@ -227,7 +227,7 @@ public class AllOperations extends StringUpdate {
     public String DeleteAllDigits(){
     	StringBuilder lettersOnly = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i); //cheks every character in the sentence
+            char c = text.charAt(i); //checks every character in the sentence
             if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') { // Checks if the character is a letter
             	lettersOnly.append(c); //adds the letters only
             }
@@ -238,7 +238,7 @@ public class AllOperations extends StringUpdate {
     public String DeleteAllLetters(){
         StringBuilder digitsOnly = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i); //cheks every character in the sentence
+            char c = text.charAt(i); //checks every character in the sentence
             if (c >= '0' && c <= '9') { // Checks if the character is a number
                 digitsOnly.append(c); //adds the numbers only
             }
@@ -250,7 +250,7 @@ public class AllOperations extends StringUpdate {
     public String  DeleteAllCharExceptDigitsAndLetters(){
     	StringBuilder lettersAndNumbers = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i); //cheks every character in the sentence
+            char c = text.charAt(i); //checks every character in the sentence
             if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') { // Checks if the character is a letter or a number
             	lettersAndNumbers.append(c); //adds the numbers and letters
             }
