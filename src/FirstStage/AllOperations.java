@@ -146,6 +146,9 @@ public class AllOperations extends StringUpdate {
     }
    
     public String DeleteBeforeAndAfterAllElement(String element){ 
+    	if (element == null || element.isEmpty() || text == null) {
+            return "Something went wrong";
+        }
     	
     	ArrayList<String> foundElements = new ArrayList<>();
         int index = 0;
