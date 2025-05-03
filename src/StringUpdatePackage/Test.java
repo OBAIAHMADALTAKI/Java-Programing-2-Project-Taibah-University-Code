@@ -1,13 +1,28 @@
-package FirstStage;
-
-import java.math.*;
+package StringUpdatePackage;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 public class Test  {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         AllOperations ops = new AllOperations();
-
+        
+        
+        // To test my deleting methods
+        //System.out.println(ops.DeleteBeforeAndAfterElement("a"));
+        //System.out.println(ops.DeleteBeforeAndAfterAllElement("a"));
+        //System.out.println(ops.DeleteCharWithStartingFirstIndex(100000));
+        //System.out.println(ops.DeleteCharWithLastIndex(100000));
+        //System.out.println(ops.DeleteCharWithAnyIndex(1));
+        //System.out.println(ops.DeleteStartsIndexToLast(1,1));
+        //System.out.println(ops.DeleteStartsCharToChar('',''));
+        //System.out.println(ops.DeleteAllDigits());
+        //System.out.println(ops.DeleteAllLetters());
+        //System.out.println(ops.DeleteAllCharExceptDigitsAndLetters());
+        //System.out.println(ops.DeleteAll());
+        //
+        
         while (true) {
             System.out.println("Choose a data type:");
             System.out.println("1. Byte\n2. Short\n3. Integer\n4. Long\n5. Float\n6. Double");

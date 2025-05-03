@@ -1,4 +1,4 @@
-package FirstStage;
+package StringUpdatePackage;
 
 public interface SaveFile {
     int MAX_INT = Integer.MAX_VALUE;
