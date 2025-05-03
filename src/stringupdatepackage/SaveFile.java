@@ -1,4 +1,4 @@
-package StringUpdatePackage;
+package stringupdatepackage;
 
 public interface SaveFile {
     int MAX_INT = Integer.MAX_VALUE;
@@ -8,8 +8,8 @@ public interface SaveFile {
     short MAX_SHORT = Short.MAX_VALUE;
     byte MAX_BYTE = Byte.MAX_VALUE;
 
-    public abstract void WriteFile();
+    public abstract void writeFile();
 
-    public abstract void ReadFile();
+    public abstract void readFile();
     
 }

@@ -1,38 +1,38 @@
-package StringUpdatePackage;
+package stringupdatepackage;
 
 public abstract class StringUpdate implements SaveFile {
-    private int Choose = 0;
-    private long CapacitySize = 10;
-    private static int NumberOfOperations = 0 ;
+    private int choose = 0;
+    private long capacitysize = 10;
+    private static int numberofoperations = 0 ;
 
-    public StringUpdate(){}
+    protected  StringUpdate(){}
     
-    public StringUpdate(long CapacitySize){
-        this.CapacitySize = CapacitySize;
+    protected StringUpdate(long capacitysize){
+        this.capacitysize = capacitysize;
     }
-    public void setChoose(int Choose){
-        this.Choose = Choose;
+    public void setChoose(int choose){
+        this.choose = choose;
     }
     public int getChoose(){
-        return Choose;
+        return choose;
     }
-    public void setCapacitySize(long CapacitySize){
-        this.CapacitySize = CapacitySize;
+    public void setCapacitySize(long capacitysize){
+        this.capacitysize = capacitysize;
     }
     public long getCapacitySize(){
-        return CapacitySize;
+        return capacitysize;
     }
-    public void setNumberOfOperations(int NumberOfOperations){
-        this.NumberOfOperations = NumberOfOperations;
+    public static void setNumberOfOperations(int numberofoperations){
+        StringUpdate.numberofoperations= numberofoperations;
     }
     public int getNumberOfOperations(){
-        return NumberOfOperations;
+        return numberofoperations;
     }
     @Override
-    public void WriteFile(){}
+    public void writeFile(){}
 
     @Override
-    public void ReadFile(){}
+    public void readFile(){}
 
     public void PrintList(){
         System.out.println("Choose an insertion operation:");

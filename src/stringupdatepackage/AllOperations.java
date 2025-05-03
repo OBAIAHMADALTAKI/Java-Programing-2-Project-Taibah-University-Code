@@ -1,4 +1,4 @@
-package StringUpdatePackage;
+package stringupdatepackage;
 import java.util.ArrayList;
 
 public class AllOperations extends StringUpdate {

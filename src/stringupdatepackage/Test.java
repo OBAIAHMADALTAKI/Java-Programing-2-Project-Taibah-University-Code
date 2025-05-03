@@ -1,4 +1,4 @@
-package StringUpdatePackage;
+package stringupdatepackage;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Scanner;
