@@ -1,4 +1,4 @@
-package FirstStage;
+package StringUpdatePackage;
 
 public abstract class StringUpdate implements SaveFile {
     private int Choose = 0;
