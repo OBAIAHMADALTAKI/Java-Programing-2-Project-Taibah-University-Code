@@ -2,10 +2,25 @@ package stringupdatepackage;
 import java.util.ArrayList;
 
 public class AllOperations extends StringUpdate {
-    private StringBuilder text = new StringBuilder(""); //Fill it if you want to test
+    private StringBuilder text;
+    public AllOperations(){
+
+    }
+
+    public AllOperations(String initial) {
+        this.text = new StringBuilder(initial);
+    }
+
+    public void setText(String s) {
+        text = new StringBuilder(s);
+    }
+
+    public String getText() {
+        return text.toString();
+    } 
     
     public String insertLast(String insert) {
-        text.append(insert).append(" ");
+        text.append(insert);
         return text.toString().trim();
     }
 
@@ -14,7 +29,7 @@ public class AllOperations extends StringUpdate {
         if (words.length == 0) return insert;
 
         int lastIndex = text.lastIndexOf(words[words.length - 1]);
-        text.insert(lastIndex, insert + " ");
+        text.insert(lastIndex, insert );
         return text.toString().trim();
     }
 
@@ -36,7 +51,7 @@ public class AllOperations extends StringUpdate {
     }
 
     public String insertFirst(String insert) {
-        text.insert(0, insert + " ");
+        text.insert(0, insert );
         return text.toString().trim();
     }
 
@@ -45,7 +60,7 @@ public class AllOperations extends StringUpdate {
         if (words.length == 0) return insert;
 
         int index = text.indexOf(words[0]) + words[0].length();
-        text.insert(index, " " + insert);
+        text.insert(index,insert);
         return text.toString().trim();
     }
 
@@ -70,7 +85,7 @@ public class AllOperations extends StringUpdate {
     public String insertAfterElement(String element, String insert) {
         int index = text.indexOf(element);
         if (index != -1) {
-            text.insert(index + element.length(), " " + insert);
+            text.insert(index + element.length(), insert);
         }
         return text.toString().trim();
     }
@@ -79,7 +94,7 @@ public class AllOperations extends StringUpdate {
         int index = 0;
         while ((index = text.indexOf(element, index)) != -1) {
             index += element.length();
-            text.insert(index, " " + insert);
+            text.insert(index, insert);
             index += insert.length() + 1;
         }
         return text.toString().trim();
@@ -88,7 +103,7 @@ public class AllOperations extends StringUpdate {
     public String insertBeforeElement(String element, String insert) {
         int index = text.indexOf(element);
         if (index != -1) {
-            text.insert(index, insert + " ");
+            text.insert(index, insert);
         }
         return text.toString().trim();
     }
@@ -96,7 +111,7 @@ public class AllOperations extends StringUpdate {
     public String insertBeforeAllElement(String element, String insert) {
         int index = 0;
         while ((index = text.indexOf(element, index)) != -1) {
-            text.insert(index, insert + " ");
+            text.insert(index, insert);
             index += insert.length() + element.length() + 1;
         }
         return text.toString().trim();
@@ -133,11 +148,8 @@ public class AllOperations extends StringUpdate {
         text.insert(position, insert);
         return text.toString().trim();
     }
-   
-    /*****************************************************************************************/
-    //the start of delete methods
     
-    public String DeleteBeforeAndAfterElement(String element){
+    public String deleteBeforeAndAfterElement(String element){
     	int index = text.indexOf(element);
         if (index != -1) {
         	return text.substring(index, index + element.length()).trim();
@@ -145,7 +157,7 @@ public class AllOperations extends StringUpdate {
         return "Element not found";
     }
    
-    public String DeleteBeforeAndAfterAllElement(String element){ 
+    public String deleteBeforeAndAfterAllElement(String element){ 
     	if (element == null || element.isEmpty() || text == null) {
             return "Something went wrong";
         }
@@ -173,21 +185,21 @@ public class AllOperations extends StringUpdate {
     }
     
     
-    public String  DeleteCharWithLastIndex(int index){   	
+    public String  deleteCharWithLastIndex(int index){   	
     	text.reverse();
     	text.deleteCharAt(0);
     	text.reverse();
     	return text.toString();
     }
     
-    public String  DeleteCharWithAnyIndex(int index){
+    public String  deleteCharWithAnyIndex(int index){
     	if (index <= text.length() && index > 0) {
             return text.deleteCharAt(index-1).toString();
         }
     	return "Index out of bounds";
     }
     
-    public String DeleteStartsIndexToLast(int start, int end){
+    public String deleteStartsIndexToLast(int start, int end){
     	
     	if (start > end) {
             return "The first number must be smaller than the second number.."; // To make sure the first index is smaller than the second one
@@ -200,7 +212,7 @@ public class AllOperations extends StringUpdate {
     }
     
     
-    public String DeleteStartsCharToChar(char c1, char c2){
+    public String deleteStartsCharToChar(char c1, char c2){
     	//converts char to String to use ".indexOF()" method
     	String start = String.valueOf(c1);
         String end = String.valueOf(c2);
@@ -224,7 +236,7 @@ public class AllOperations extends StringUpdate {
         
     }
     
-    public String DeleteAllDigits(){
+    public String deleteAllDigits(){
     	StringBuilder lettersOnly = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i); //checks every character in the sentence
@@ -235,7 +247,7 @@ public class AllOperations extends StringUpdate {
         return lettersOnly.toString();
     }
     
-    public String DeleteAllLetters(){
+    public String deleteAllLetters(){
         StringBuilder digitsOnly = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i); //checks every character in the sentence
@@ -247,7 +259,7 @@ public class AllOperations extends StringUpdate {
     }
     
     
-    public String  DeleteAllCharExceptDigitsAndLetters(){
+    public String  deleteAllCharExceptDigitsAndLetters(){
     	StringBuilder lettersAndNumbers = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i); //checks every character in the sentence
@@ -258,9 +270,494 @@ public class AllOperations extends StringUpdate {
         return lettersAndNumbers.toString();
     }
     
-    
-    public String DeleteAll(){
+    public String deleteAll(){
     	return text.delete(0, text.length()).toString();
     }
 
+    public String deleteFirstChar() {
+        if (text == null || text.toString().trim().isEmpty()){
+            return "text is empty";
+        }
+        else{
+            return text.toString().trim().substring(1);
+        }  
+    }
+
+    public String deleteAfterFirstChar(){
+        if (text == null || text.toString().trim().isEmpty()){
+            return "text is empty";
+        }
+        else{
+            StringBuilder textEdit = new StringBuilder(text.toString().trim());
+                return textEdit.deleteCharAt(1).toString();
+        }
+    }
+    public String deleteAllAfterFirstChar(){
+        if (text == null || text.toString().trim().isEmpty()){
+            return "text is empty";
+        }
+        else{
+            StringBuilder textEdit = new StringBuilder(text.toString().trim());
+            return textEdit.delete(1, textEdit.length()).toString();
+        }
+    }
+    public String deleteLastChar(){
+        if (text == null || text.toString().trim().isEmpty()){
+            return "text is empty";
+        }
+        else{
+            StringBuilder textEdit = new StringBuilder(text.toString().trim());
+            return textEdit.deleteCharAt(textEdit.length() ).toString();
+        }
+    }
+
+    public String deleteBeforeLastChar(){
+        if (text == null || text.toString().trim().isEmpty()){//OBAI 4 ,3
+            return "text is empty";
+        }
+        else if(text.toString().trim().length() == 1){
+            return "text have only one letter";
+        }
+        else{
+            StringBuilder textEdit = new StringBuilder(text.toString().trim());
+            return textEdit.deleteCharAt(textEdit.length() -2).toString();
+        }
+    }
+    public String deleteAllBeforeLastChar(){
+        if (text == null || text.toString().trim().isEmpty()){
+            return "text is empty";
+        }
+        else if(text.toString().trim().length() == 1){
+            return "text have only one letter";
+        }
+        else{
+            StringBuilder textEdit = new StringBuilder(text.toString().trim());
+            return textEdit.delete(0,textEdit.length() - 1).toString();
+        }
+    }
+
+    public String deleteElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+    
+        String originalText = text.toString();
+        String lowerText = originalText.toLowerCase();
+        String lowerElement = element.toLowerCase();
+    
+        int index = lowerText.indexOf(lowerElement);
+    
+        if (index != -1) {
+            text.delete(index, index + element.length());
+            return text.toString();
+        } else {
+            return "The item you want to delete is not available in the text";
+        }
+    }
+
+    public String deleteAllElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+    
+        String lowerElement = element.toLowerCase();
+        String lowerText = text.toString().toLowerCase();
+    
+        // تحقق إذا الكلمة غير موجودة
+        if (!lowerText.contains(lowerElement)) {
+            return "The item you want to delete is not available in the text";
+        }
+    
+        // حذف جميع التطابقات
+        while (true) {
+            lowerText = text.toString().toLowerCase();  // تحديث بعد كل حذف
+            int index = lowerText.indexOf(lowerElement);
+    
+            if (index == -1) {
+                break;
+            }
+    
+            text.delete(index, index + element.length());
+        }
+    
+        return text.toString().trim();
+    }
+    
+    public String deleteAfterElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+    
+        String originalText = text.toString();
+        String lowerText = originalText.toLowerCase();
+        String lowerElement = element.toLowerCase();
+    
+        int index = lowerText.indexOf(lowerElement);
+    
+        if (index != -1) {
+            int deleteStart = index + element.length();
+            text.delete(deleteStart, deleteStart + 1);
+            return text.toString();
+        } else {
+            return "The item you want to delete is not available in the text";
+        }
+    }
+
+    public String deleteAfterAllElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+    
+        if (element == null || element.isEmpty()) {
+            return "Invalid input element";
+        }
+    
+        boolean found = false;
+        int i = 0;
+    
+        while (i <= text.length() - element.length()) {
+            String currentSub = text.substring(i, i + element.length());
+    
+            if (currentSub.equalsIgnoreCase(element)) {
+                int deleteIndex = i + element.length();
+                if (deleteIndex < text.length()) {
+                    text.deleteCharAt(deleteIndex);  // نحذف الحرف الذي يلي العنصر
+                }
+                found = true;
+                i += element.length();  // ننتقل بعد الكلمة (بدون الرجوع للخلف)
+            } else {
+                i++;
+            }
+        }
+    
+        return found ? text.toString() : "The item you want to delete is not available in the text";
+    }
+
+    public String deleteAllAfterElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+    
+        if (element == null || element.isEmpty()) {
+            return "Invalid input element";
+        }
+    
+        String lowerText = text.toString().toLowerCase();
+        String lowerElement = element.toLowerCase();
+    
+        int index = lowerText.indexOf(lowerElement);
+    
+        if (index != -1) {
+            int deleteStart = index + element.length();
+            text.delete(deleteStart, text.length());  // حذف كل ما بعد العنصر
+            return text.toString();
+        } else {
+            return "The item you want to delete is not available in the text";
+        }
+    }
+    public String deleteBeforeElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+
+        String lowerText = text.toString().toLowerCase();
+        String lowerElement = element.toLowerCase();
+        int index = lowerText.indexOf(lowerElement);
+
+        if (index != -1) {
+            int deleteIndex = index - 1;
+            if (deleteIndex >= 0) {
+                text.deleteCharAt(deleteIndex);
+            }
+            return text.toString();
+        } else {
+            return "The item you want to delete is not available in the text";
+        }
+    }
+
+    public String deleteBeforeAllElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+
+        if (element == null || element.isEmpty()) {
+            return "Invalid input element";
+        }
+
+        boolean found = false;
+        int i = 0;
+
+        while (i <= text.length() - element.length()) {
+            String currentSub = text.substring(i, i + element.length());
+
+            if (currentSub.equalsIgnoreCase(element)) {
+                int deleteIndex = i - 1;
+                if (deleteIndex >= 0 && deleteIndex < text.length()) {
+                    text.deleteCharAt(deleteIndex);
+                    i -= 1; // Adjust because we deleted a char before
+                }
+                found = true;
+                i += element.length();
+            } else {
+                i++;
+            }
+        }
+
+        return found ? text.toString() : "The item you want to delete is not available in the text";
+    }
+
+    public String deleteAllBeforeElement(String element) {
+        if (text == null || text.toString().trim().isEmpty()) {
+            return "text is empty";
+        }
+
+        if (element == null || element.isEmpty()) {
+            return "Invalid input element";
+        }
+
+        String lowerText = text.toString().toLowerCase();
+        String lowerElement = element.toLowerCase();
+
+        int index = lowerText.indexOf(lowerElement);
+
+        if (index != -1) {
+            text.delete(0, index);
+            return text.toString();
+        } else {
+            return "The item you want to delete is not available in the text";
+        }
+    }
+
+    public String[] convertWordsToArray() {
+        return text.toString().trim().split("\\s+");
+    }
+
+    // 2. Convert letters to array
+    public char[] convertLettersToArray() {
+        return text.toString().toCharArray();
+    }
+
+    // 3. Shuffle words
+    public String shuffleWords() {
+        String[] words = convertWordsToArray();
+        java.util.List<String> list = new java.util.ArrayList<>();
+        for (String w : words) list.add(w);
+        java.util.Collections.shuffle(list);
+        StringBuilder sb = new StringBuilder();
+        for (String w : list) sb.append(w).append(' ');
+        return sb.toString().trim();
+    }
+
+    // 4. Shuffle letters
+    public String shuffleLetters() {
+        char[] chars = convertLettersToArray();
+        java.util.List<Character> list = new java.util.ArrayList<>();
+        for (char c : chars) list.add(c);
+        java.util.Collections.shuffle(list);
+        StringBuilder sb = new StringBuilder(list.size());
+        for (char c : list) sb.append(c);
+        return sb.toString();
+    }
+
+    // 5. Reverse content
+    public String reverse() {
+        return text.reverse().toString();
+    }
+
+    // 6. Sort letters ascending
+    public String sortLettersAsc() {
+        char[] arr = convertLettersToArray();
+        java.util.Arrays.sort(arr);
+        return new String(arr);
+    }
+
+    // 7. Sort letters descending
+    public String sortLettersDesc() {
+        char[] arr = convertLettersToArray();
+        Character[] boxed = new Character[arr.length];
+        for (int i = 0; i < arr.length; i++) boxed[i] = arr[i];
+        java.util.Arrays.sort(boxed, java.util.Collections.reverseOrder());
+        StringBuilder sb = new StringBuilder(boxed.length);
+        for (char c : boxed) sb.append(c);
+        return sb.toString();
+    }
+
+    // 8. Search substring
+    public boolean search(String element) {
+        return text.indexOf(element) != -1;
+    }
+
+    // 9. Update by index range
+    public void updateByIndex(int start, int end, String element) {
+        if (start < 0 || end > text.length() || start > end) {
+            throw new StringIndexOutOfBoundsException("Invalid indices");
+        }
+        text.replace(start, end, element);
+    }
+
+    // 10. Update first occurrence
+    public boolean updateFirst(String oldValue, String newValue) {
+        int idx = text.indexOf(oldValue);
+        if (idx < 0) return false;
+        text.replace(idx, idx + oldValue.length(), newValue);
+        return true;
+    }
+
+    // 11. Update all occurrences
+    public void updateAll(String oldValue, String newValue) {
+        StringBuilder result = new StringBuilder();
+        String s = text.toString();
+        int i = 0;
+        while (i < s.length()) {
+            int idx = s.indexOf(oldValue, i);
+            if (idx < 0) {
+                result.append(s.substring(i));
+                break;
+            }
+            result.append(s, i, idx);
+            result.append(newValue);
+            i = idx + oldValue.length();
+        }
+        text = result;
+    }
+
+    // 12. Sum two Numbers with overflow check
+    public Number sum(Number n1, Number n2) {
+        if (n1 instanceof Byte && n2 instanceof Byte) {
+            int r = n1.byteValue() + n2.byteValue();
+            if (r > Byte.MAX_VALUE || r < Byte.MIN_VALUE)
+                throw new ArithmeticException("You can't sum more than Max Value for Byte.");
+            return (byte) r;
+        } else if (n1 instanceof Short && n2 instanceof Short) {
+            int r = n1.shortValue() + n2.shortValue();
+            if (r > Short.MAX_VALUE || r < Short.MIN_VALUE)
+                throw new ArithmeticException("You can't sum more than Max Value for Short.");
+            return (short) r;
+        } else if (n1 instanceof Integer && n2 instanceof Integer) {
+            long r = (long) n1.intValue() + n2.intValue();
+            if (r > Integer.MAX_VALUE || r < Integer.MIN_VALUE)
+                throw new ArithmeticException("You can't sum more than Max Value for Integer.");
+            return (int) r;
+        } else if (n1 instanceof Long && n2 instanceof Long) {
+            long r = n1.longValue() + n2.longValue();
+            if ((n2.longValue() > 0 && r < n1.longValue()) ||
+                (n2.longValue() < 0 && r > n1.longValue()))
+                throw new ArithmeticException("You can't sum more than Max Value for Long.");
+            return r;
+        } else if (n1 instanceof Float && n2 instanceof Float) {
+            float r = n1.floatValue() + n2.floatValue();
+            if (Float.isInfinite(r))
+                throw new ArithmeticException("You can't sum more than Max Value for Float.");
+            return r;
+        } else if (n1 instanceof Double && n2 instanceof Double) {
+            double r = n1.doubleValue() + n2.doubleValue();
+            if (Double.isInfinite(r))
+                throw new ArithmeticException("You can't sum more than Max Value for Double.");
+            return r;
+        } else {
+            // fallback
+            return n1.doubleValue() + n2.doubleValue();
+        }
+    }
+
+    // 13. Print first letter
+    public char printFirstLetter() {
+        return text.length() > 0 ? text.charAt(0) : '\0';
+    }
+
+    // 14. Print first word
+    public String printFirstWord() {
+        String[] w = convertWordsToArray();
+        return w.length > 0 ? w[0] : "";
+    }
+
+    // 15. Print first sentence
+    public String printFirstSentence() {
+        String s = text.toString();
+        int end = -1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '.' || c == '!' || c == '?') { end = i; break; }
+        }
+        return end >= 0 ? s.substring(0, end+1).trim() : s.trim();
+    }
+
+    // 16. Print last letter
+    public char printLastLetter() {
+        return text.length() > 0 ? text.charAt(text.length()-1) : '\0';
+    }
+
+    // 17. Print last word
+    public String printLastWord() {
+        String[] w = convertWordsToArray();
+        return w.length > 0 ? w[w.length-1] : "";
+    }
+
+    // 18. Print last sentence
+    public String printLastSentence() {
+        String s = text.toString();
+        int start = -1;
+        for (int i = s.length()-1; i >= 0; i--) {
+            char c = s.charAt(i);
+            if (c == '.' || c == '!' || c == '?') { start = i; break; }
+        }
+        return start >= 0 && start < s.length()-1 ? s.substring(start+1).trim() : s.trim();
+    }
+
+    // 19. Print size
+    public int printSize() {
+        return text.length();
+    }
+
+    // 20. Print capacity
+    public int printCapacity() {
+        return text.capacity();
+    }
+
+    public char printChar(int idx) {
+        return (idx >= 0 && idx < text.length()) ? text.charAt(idx) : '\0';
+    }
+
+    public String PrintElement(int startIndex, int endIndex) {
+    
+    if (text.length() == 0) {
+        return "Text is empty";
+    }
+
+    if (startIndex < 0 || endIndex > text.length() || startIndex >= endIndex) {
+        return "Invalid index range";
+    }
+
+    String result = text.substring(startIndex, endIndex);
+
+    return result;
 }
+
+
+    // 22. Index of first occurrence
+    public int printIndexOfFirstElement(String element) {
+        return text.indexOf(element);
+    }
+
+    // 23. Index of last occurrence
+    public int printIndexOfLastElement(String element) {
+        return text.lastIndexOf(element);
+    }
+
+    // 24. Index of all occurrences
+    public int[] printIndexOfAllElement(String element) {
+        java.util.List<Integer> list = new java.util.ArrayList<>();
+        String s = text.toString();
+        int i = 0;
+        while (i <= s.length() - element.length()) {
+            int idx = s.indexOf(element, i);
+            if (idx < 0) break;
+            list.add(idx);
+            i = idx + element.length();
+        }
+        int[] res = new int[list.size()];
+        for (int j = 0; j < list.size(); j++) res[j] = list.get(j);
+        return res;
+    }
+}
+    
