@@ -1,5 +1,7 @@
 package stringupdatepackage;
 
+import java.io.File;
+
 public interface SaveFile {
     int MAX_INT = Integer.MAX_VALUE;
     double MAX_DOUBLE = Double.MAX_VALUE;
@@ -8,8 +10,7 @@ public interface SaveFile {
     short MAX_SHORT = Short.MAX_VALUE;
     byte MAX_BYTE = Byte.MAX_VALUE;
 
-    public abstract void writeFile();
-
-    public abstract void readFile();
+    void writeFile(File file);
+    void readFile(File file);
     
 }

@@ -1,0 +1,7 @@
+List: [10.0, 1.0, 5.0, 7.0, 1000.0]
+Max: 1000.0
+Min: 1.0
+Size: 5
+Capacity: 5
+Sum: 1023.0
+Average: 204.6

@@ -1,40 +1,137 @@
 package stringupdatepackage;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
+
+
 public abstract class StringUpdate implements SaveFile {
     private int choose = 0;
     private long capacitysize = 10;
-    private static int numberofoperations = 0 ;
+    private Date dateCreated;
 
-    protected  StringUpdate(){}
+   
+    protected StringUpdate() {
+        this.dateCreated = new Date();
+    }
+
+    protected StringUpdate(long capacitysize) {
+        this.capacitysize = capacitysize;
+    }
+
+    public void setChoose(int choose) { this.choose = choose; }
+    public int getChoose() { return choose; }
+
+    public void setCapacitySize(long capacitysize) { this.capacitysize = capacitysize; }
+    public long getCapacitySize() { return capacitysize; }
+
+    @Override
+    public void writeFile(File file){
+        try {
+            PrintWriter input = new PrintWriter(file);
+            input.write(dateCreated.toString() + "\n");
+
+            GregorianCalendar cal = new GregorianCalendar();
+
+            String[] monthNames = {"January", "February", "March", "April", "May", "June", "July",
+                                   "August", "September", "October", "November", "December"};
+            String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+            input.write("YEAR: " + cal.get(Calendar.YEAR) + "\n");
+            input.write("MONTH: " + cal.get(Calendar.MONTH) + "\n");
+            input.write("NameOfMONTH: " + monthNames[cal.get(Calendar.MONTH)] + "\n");
+            input.write("DAY_OF_MONTH: " + cal.get(Calendar.DAY_OF_MONTH) + "\n");
+            input.write("DAY_OF_WEEK: " + cal.get(Calendar.DAY_OF_WEEK) + "\n");
+            input.write("NameOfDay: " + dayNames[cal.get(Calendar.DAY_OF_WEEK) - 1] + "\n");
+            input.write("DAY_OF_WEEK_IN_MONTH: " + cal.get(Calendar.DAY_OF_WEEK_IN_MONTH) + "\n");
+            input.write("DAY_OF_YEAR: " + cal.get(Calendar.DAY_OF_YEAR) + "\n");
+            input.write("WEEK_OF_MONTH: " + cal.get(Calendar.WEEK_OF_MONTH) + "\n");
+            input.write("WEEK_OF_YEAR: " + cal.get(Calendar.WEEK_OF_YEAR) + "\n");
+            input.write("HOUR: " + cal.get(Calendar.HOUR) + "\n");
+            input.write("HOUR_OF_DAY: " + cal.get(Calendar.HOUR_OF_DAY) + "\n");
+            input.write("MINUTE: " + cal.get(Calendar.MINUTE) + "\n");
+            input.write("SECOND: " + cal.get(Calendar.SECOND) + "\n");
+            input.write("MILLISECOND: " + cal.get(Calendar.MILLISECOND) + "\n");
+            input.write("AM_PM: " + (cal.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM") + "\n");
+
+            input.close();
+            System.out.println("Date written to WriteTheDate.");
+            
+        } catch (IOException e) {
+            System.out.println("Error writing date: " + e.getMessage());
+        }
+
+    }
+    public void WriteStatistics(File file) {
+        Scanner input = new Scanner(System.in);
+        List<Number> list = new ArrayList<>();
     
-    protected StringUpdate(long capacitysize){
-        this.capacitysize = capacitysize;
+        System.out.println("Enter numbers to be added and averaged.");
+        System.out.println("Write 'stop' to finish.");
+    
+        while (true) {
+            String line = input.nextLine();
+    
+            if (line.equalsIgnoreCase("stop")) {
+                break;
+            }
+    
+            try {
+                double number = Double.parseDouble(line);
+                list.add(number);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Try again.");
+            }
+        }
+    
+        double sum = 0, max = Double.MIN_VALUE, min = Double.MAX_VALUE;
+        for (Number n : list) {
+            double val = n.doubleValue();
+            sum += val;
+            max = Math.max(max, val);
+            min = Math.min(min, val);
+        }
+        double average = list.isEmpty() ? 0 : sum / list.size();
+    
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            writer.println("List: " + list);
+            writer.println("Max: " + max);
+            writer.println("Min: " + min);
+            writer.println("Size: " + list.size());
+            writer.println("Capacity: " + list.size());
+            writer.println("Sum: " + sum);
+            writer.println("Average: " + average);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        System.out.println("Statistics saved to " + file.getName());
     }
-    public void setChoose(int choose){
-        this.choose = choose;
+         @Override
+    public void readFile(File file) {
+    if (!file.exists()) {
+        System.out.println("The file does not exist.");
+        return;
     }
-    public int getChoose(){
-        return choose;
-    }
-    public void setCapacitySize(long capacitysize){
-        this.capacitysize = capacitysize;
-    }
-    public long getCapacitySize(){
-        return capacitysize;
-    }
-    public static void setNumberOfOperations(int numberofoperations){
-        StringUpdate.numberofoperations= numberofoperations;
-    }
-    public int getNumberOfOperations(){
-        return numberofoperations;
-    }
-    @Override
-    public void writeFile(){}
 
-    @Override
-    public void readFile(){}
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line); 
+        }
+    } catch (IOException e) {
+        System.out.println("An error occurred while reading the file.");
+        e.printStackTrace();
+    }
+}
+ 
 
-    public void PrintList(){
+    public void PrintList() {
         System.out.println("Choose an insertion operation:");
         System.out.println(" 1. Insert Last ");
         System.out.println(" 2. Insert Before Last");
@@ -53,5 +150,4 @@ public abstract class StringUpdate implements SaveFile {
         System.out.println("0. Back to operations menu");
         System.out.println("Your choice: ");
     }
-    
 }
