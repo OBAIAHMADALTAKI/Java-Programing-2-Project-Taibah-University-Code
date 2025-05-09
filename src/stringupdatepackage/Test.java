@@ -1,11 +1,1502 @@
 package stringupdatepackage;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import javafx.application.Application;
 
-public class Test {
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+public class Test extends Application {
+    
+    AllOperations a = new AllOperations();
+    
+    
+    private double logoX = 0;
+    private double logoY = 0;
+
+    // Buttons
+    Button setText = new Button("Confirm String");
+    Button executeButton = new Button("Execute");
+    Button refreshButton = new Button("Refresh");
+    Button helpButton = new Button("Help");
+    
+    // Labels with improved descriptive text
+    Label lbMainText = new Label("Enter the text to Edit:");
+    Label lbElement = new Label("Element to search for:");
+    Label lbIndex = new Label("Index position:");
+    Label lbEndIndex = new Label("End index position:"); 
+    Label lbInsert = new Label("Text to insert:");
+    Label lbResult = new Label("Result:");
+    
+    // Text components
+    Text titleText = new Text("Advanced Text Editor");
+    Text statusText = new Text("Ready");
+    Text footerText = new Text("© 2025 Text Editor");
+    
+    // TextFields
+    TextField mainText = new TextField();
+    TextField elementField = new TextField();
+    TextField indexField = new TextField();
+    TextField endIndexField = new TextField();
+    TextField insertField = new TextField();
+    TextArea resultField = new TextArea();
+    TextField sumFirstNumberField = new TextField();
+    TextField sumScoendNumberField = new TextField();
+
+    // TextArea for multiline text
+    TextArea logTextArea = new TextArea();
+    
+    // CheckBox components
+    CheckBox darkModeCheckBox = new CheckBox("Dark Mode");
+
+    CheckBox trimSpacesCheckBox = new CheckBox("Trim Spaces");
+    
+    // RadioButton components with ToggleGroup
+    
+    
+    // Images
+    Image logoImage = null;
+    ImageView logoView = null;
+    Image refreshIcon = null;
+    ImageView refreshIconView = null;
+    Image helpIcon = null;
+    ImageView helpIconView = null;
+    
+    // Method lists
+    ObservableList<String> insertMethodsNames = FXCollections.observableArrayList(
+            "Insert Methods (Select one)",
+            "Insert at end of string",
+            "Insert before last",
+            "Insert before & after last",
+            "Insert at beginning of string",
+            "Insert after first character",
+            "Insert before & after first",
+            "Insert after specific element",
+            "Insert after all occurrences of element",
+            "Insert before specific element",
+            "Insert before all occurrences of element",
+            "Insert before & after specific element",
+            "Insert before & after all occurrences of element",
+            "Insert at specific index from beginning",
+            "Insert at specific index from end"
+    );
+    
+    ObservableList<String> deleteMethodNames = FXCollections.observableArrayList(
+            "Delete Methods (Select one)",
+            "Delete first character",
+            "Delete character after first",
+            "Delete all after first character",
+            "Delete last character",
+            "Delete character before last",
+            "Delete all before last character",
+            "Delete specific element",
+            "Delete all occurrences of element",
+            "Delete after specific element",
+            "Delete after all occurrences of element",
+            "Delete all after specific element",
+            "Delete before specific element",
+            "Delete before all occurrences of element",
+            "Delete all before specific element",
+            "Delete before & after specific element",
+            "Delete before & after all occurrences of element",
+            "Delete character at specific index from beginning",
+            "Delete character at specific index from end",
+            "Delete character at any index",
+            "Delete from start index to end index",
+            "Delete from first char to second char",
+            "Delete all digits",
+            "Delete all letters",
+            "Delete all except digits and letters",
+            "Delete all (clear)"
+    );
+    
+    // New Print method list
+    ObservableList<String> printMethodNames = FXCollections.observableArrayList(
+            "Print Methods (Select one)",
+            "Print first letter",
+            "Print first word",
+            "Print first sentence",
+            "Print last letter",
+            "Print last word",
+            "Print last sentence",
+            "Print size",
+            "Print capacity",
+            "Print character at specific index",
+            "Print text between indices",
+            "Print index of first occurrence",
+            "Print index of last occurrence", 
+            "Print indices of all occurrences"
+    );
+    
+    // New Traversal method list
+    ObservableList<String> traversalMethodNames = FXCollections.observableArrayList(
+            "Traversal Methods (Select one)",
+            "Convert words to array",
+            "Convert letters to array",
+            "Shuffle words",
+            "Shuffle letters",
+            "Reverse content",
+            "Sort letters ascending",
+            "Sort letters descending",
+            "Search for substring",
+            "Sum Number",
+            "Update by index range",
+            "Update first occurrence",
+            "Update all occurrences"
+    );
+    
+    // Method categories for the ListView
+    ObservableList<String> methodCategories = FXCollections.observableArrayList(
+            "Insert Methods",
+            "Delete Methods",
+            "Print Methods",
+            "Traversal Methods"
+    );
+    
+    ListView<String> methodCategoryListView = new ListView<>(methodCategories);
+    ComboBox<String> methodsComboBox = new ComboBox<>();
+    
+    // Operation log
+    StringBuilder operationLog = new StringBuilder();
+    
+    @Override
+    public void start(Stage primaryStage) {
+        	
+
+        // Setup containers
+        BorderPane mainPane = new BorderPane();
+        GridPane centerPane = new GridPane();
+        VBox leftPane = new VBox(15);
+        HBox buttonBox = new HBox(15);
+        VBox topPane = new VBox(10);
+        HBox bottomPane = new HBox(10);
+
+        // General formatting
+        centerPane.setAlignment(Pos.CENTER);
+        centerPane.setVgap(15);
+        centerPane.setHgap(15);
+        centerPane.setPadding(new Insets(25));
+        centerPane.setStyle("-fx-background-color: #f5f5f5;");
+
+        leftPane.setPadding(new Insets(20));
+        leftPane.setAlignment(Pos.TOP_CENTER);
+        leftPane.setStyle("-fx-background-color: #e0f0ff;");
+        leftPane.setPrefWidth(250); // Wider to show full method names
+        
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(15));
+        
+        topPane.setAlignment(Pos.CENTER);
+        topPane.setPadding(new Insets(15));
+        topPane.setStyle("-fx-background-color: #4a90e2;");
+        
+        bottomPane.setAlignment(Pos.CENTER);
+        bottomPane.setPadding(new Insets(10));
+        bottomPane.setStyle("-fx-background-color: #dcdcdc;");
+
+        // Setup fonts and Text node styling
+        Font labelFont = Font.font("Arial", 14);
+        Font inputFont = Font.font("Arial", 14);
+        
+        titleText.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        titleText.setFill(Color.WHITE);
+        titleText.setTextAlignment(TextAlignment.CENTER);
+        
+        statusText.setFont(Font.font("Arial", 12));
+        statusText.setFill(Color.DARKSLATEGRAY);
+        
+        footerText.setFont(Font.font("Arial", 12));
+        footerText.setFill(Color.DARKSLATEGRAY);
+
+        // Apply fonts
+        lbMainText.setFont(labelFont);
+        lbElement.setFont(labelFont);
+        lbIndex.setFont(labelFont);
+        lbEndIndex.setFont(labelFont);
+        lbInsert.setFont(labelFont);
+        lbResult.setFont(labelFont);
+
+        mainText.setFont(inputFont);
+        elementField.setFont(inputFont);
+        indexField.setFont(inputFont);
+        endIndexField.setFont(inputFont);
+        insertField.setFont(inputFont);
+        resultField.setFont(inputFont);
+
+        setText.setFont(labelFont);
+        executeButton.setFont(labelFont);
+        refreshButton.setFont(labelFont);
+        helpButton.setFont(labelFont);
+        
+        // Configure TextArea
+        logTextArea.setFont(Font.font("Monospace", 12));
+        logTextArea.setEditable(false);
+        logTextArea.setWrapText(true);
+        logTextArea.setPrefHeight(100);
+        logTextArea.setVisible(false);
+        
+        // Setup CheckBoxes
+        darkModeCheckBox.setFont(labelFont);
+        darkModeCheckBox.setSelected(true);
+        
+        trimSpacesCheckBox.setFont(labelFont);
+        trimSpacesCheckBox.setSelected(false);
+        
+        // Setup RadioButtons
+       
+        RadioButton moveWithMouseRadio = new RadioButton("Move image with mouse");
+        RadioButton moveWithArrowsRadio = new RadioButton("Move the image with arrows");
+
+        // Create ToggleGroup
+        ToggleGroup movementToggleGroup = new ToggleGroup();
+        moveWithMouseRadio.setToggleGroup(movementToggleGroup);
+        moveWithArrowsRadio.setToggleGroup(movementToggleGroup);
+
+        // Create container for radio buttons
+        VBox radioGroup = new VBox(5);
+        radioGroup.getChildren().addAll(moveWithMouseRadio, moveWithArrowsRadio);
+
+        // Set default selection
+        moveWithArrowsRadio.setSelected(true);
+
+       
+        
+        // Setup ListView and ComboBox
+        methodCategoryListView.setPrefHeight(150);
+        methodsComboBox.setPrefWidth(230);
+        methodsComboBox.setPrefHeight(30);
+        methodsComboBox.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 14;");
+        
+        // Create headers with clear styling
+        Label categoryLabel = new Label("Step 1: Select Method Category");
+        categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        categoryLabel.setTextFill(Color.DARKBLUE);
+        
+        Label methodLabel = new Label("Step 2: Select Specific Method");
+        methodLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        methodLabel.setTextFill(Color.DARKBLUE);
+        
+        // Create top panel with title and logo
+        
+        try {
+            File gifFile = new File("C:/Users/noors/git/Java-Programing-2-Project-Taibah-University-Code/logo.gif");
+
+            if (gifFile.exists()) {
+                logoImage = new Image(gifFile.toURI().toString());
+                logoView = new ImageView(logoImage);
+                logoView.setFitHeight(64);
+                logoView.setFitWidth(64);
+            } else {
+                logoView = new ImageView(); // Empty image placeholder
+                logoView.setFitHeight(64);
+                logoView.setFitWidth(64);
+                System.out.println("GIF not found at: " + gifFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            logoView = new ImageView();
+            logoView.setFitHeight(64);
+            logoView.setFitWidth(64);
+            System.out.println("Error loading GIF: " + e.getMessage());
+        }
+        HBox titleBox = new HBox(15);
+        titleBox.setAlignment(Pos.CENTER);
+        titleBox.getChildren().addAll(logoView, titleText);
+        topPane.getChildren().add(titleBox);
+        
+        // Create bottom panel with status and footer
+        bottomPane.getChildren().addAll(statusText, footerText);
+        HBox.setMargin(footerText, new Insets(0, 0, 0, 300)); // Push footer to the right
+        
+        // Organize method selection in left panel
+        VBox methodSelectionBox = new VBox(12);
+        methodSelectionBox.getChildren().addAll(
+            categoryLabel, 
+            methodCategoryListView,
+            methodLabel,
+            methodsComboBox
+        );
+        
+        // Create options panel
+        VBox optionsPanel = new VBox(10);
+        optionsPanel.setPadding(new Insets(10));
+        optionsPanel.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-radius: 5;");
+        
+        // Add title to options panel
+        Text optionsTitle = new Text("Options");
+        optionsTitle.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        
+        // Group checkboxes and radio buttons
+        HBox checkBoxGroup = new HBox(10);
+        checkBoxGroup.getChildren().addAll(darkModeCheckBox);
+        
+       ;
+        
+        optionsPanel.getChildren().addAll(optionsTitle, checkBoxGroup, radioGroup);
+        
+        // Add help button at the bottom of left panel
+        leftPane.getChildren().addAll(methodSelectionBox, optionsPanel, helpButton);
+
+        // Main text input with confirmation button
+        HBox mainTextBox = new HBox(10);
+        mainTextBox.setAlignment(Pos.CENTER_LEFT);
+        mainText.setPrefWidth(350);
+        setText.setPrefWidth(120);
+        mainTextBox.getChildren().addAll(lbMainText, mainText, setText);
+        
+        // Create containers for input fields
+        HBox sumBox = new HBox(10);
+        sumBox.setAlignment(Pos.CENTER_LEFT);
+        sumFirstNumberField.setPrefWidth(120);
+        sumScoendNumberField.setPrefWidth(120);
+        Label sumLabel1 = new Label("Number 1:");
+        Label sumLabel2 = new Label("Number 2:");
+        sumLabel1.setFont(labelFont);
+        sumLabel2.setFont(labelFont);
+        sumBox.getChildren().addAll(sumLabel1, sumFirstNumberField, sumLabel2, sumScoendNumberField);
+        sumBox.setVisible(false);
+
+        VBox inputFields = new VBox(15);
+        
+        // Input field groups
+        HBox elementBox = new HBox(10);
+        elementBox.setAlignment(Pos.CENTER_LEFT);
+        elementField.setPrefWidth(250);
+        elementBox.getChildren().addAll(lbElement, elementField);
+        
+        HBox indexBox = new HBox(10);
+        indexBox.setAlignment(Pos.CENTER_LEFT);
+        indexField.setPrefWidth(250);
+        indexBox.getChildren().addAll(lbIndex, indexField);
+        
+        HBox endIndexBox = new HBox(10);
+        endIndexBox.setAlignment(Pos.CENTER_LEFT);
+        endIndexField.setPrefWidth(250);
+        endIndexBox.getChildren().addAll(lbEndIndex, endIndexField);
+        
+        HBox insertBox = new HBox(10);
+        insertBox.setAlignment(Pos.CENTER_LEFT);
+        insertField.setPrefWidth(250);
+        insertBox.getChildren().addAll(lbInsert, insertField);
+        
+        // Hide all fields initially
+        elementBox.setVisible(false);
+        indexBox.setVisible(false);
+        endIndexBox.setVisible(false);
+        insertBox.setVisible(false);
+        
+        // Add field groups to input container
+        inputFields.getChildren().addAll(elementBox, indexBox, endIndexBox, insertBox, sumBox);
+        
+        // Result field
+        HBox resultBox = new HBox(10);
+        resultBox.setAlignment(Pos.CENTER_LEFT);
+        resultField.setPrefWidth(350);
+        resultField.setEditable(false);
+        resultField.setStyle("-fx-background-color: #f0f8ff;");
+        resultBox.getChildren().addAll(lbResult, resultField);
+        
+        // Step labels for the center pane
+        Label step3Label = new Label("Step 3: Enter your string and parameters");
+        step3Label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        step3Label.setTextFill(Color.DARKBLUE);
+        
+        Label step4Label = new Label("Step 4: Execute the operation");
+        step4Label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        step4Label.setTextFill(Color.DARKBLUE);
+        
+        // Set up action buttons
+        buttonBox.getChildren().addAll(executeButton, refreshButton);
+        executeButton.setPrefWidth(120);
+        refreshButton.setPrefWidth(120);
+        
+        // Set up the center pane in sections with spacing
+        VBox centerVBox = new VBox(20);
+        centerVBox.getChildren().addAll(
+            step3Label,
+            mainTextBox,
+            inputFields,
+            step4Label,
+            buttonBox,
+            resultBox,
+            logTextArea
+        );
+        
+        centerPane.add(centerVBox, 0, 0);
+        
+        
+        // Event handlers
+        setText.setOnAction(e -> {
+            if (!mainText.getText().isEmpty()) {
+                a.setText(mainText.getText());
+                updateStatus("Text confirmed: " + mainText.getText());
+                showMessage("Text confirmed: " + mainText.getText());
+                addToLog("Text set to: \"" + mainText.getText() + "\"");
+            } else {
+                showError("Please enter text to modify");
+            }
+        });
+        
+        refreshButton.setOnAction(e -> {
+            resetFields();
+            updateStatus("All fields reset");
+        });
+        
+        helpButton.setOnAction(e -> {
+            showHelp();
+        });
+        
+        // Add mouse event handlers
+        logoView.setOnMouseDragged(e -> {
+            if (moveWithMouseRadio.isSelected()) {
+                // Get the parent container of the logo (likely titleBox)
+                HBox titleBox1= (HBox) logoView.getParent();
+                
+                // Calculate new position
+                double newX = e.getX() - logoView.getFitWidth() / 2;
+                double newY = e.getY() - logoView.getFitHeight() / 2;
+                
+                // Update translation
+                logoView.setTranslateX(newX);
+                logoView.setTranslateY(newY);
+                
+                // Store current position
+                logoX = newX;
+                logoY = newY;
+                
+                // Update status
+                updateStatus("Logo moved to: " + logoX + ", " + logoY);
+            }
+        });
+
+        // Key press handler for arrow keys
+        mainPane.setOnKeyPressed(e -> {
+            if (moveWithArrowsRadio.isSelected()) {
+                double moveDelta = 5.0; // Amount to move per key press
+                
+                switch (e.getCode()) {
+                    case UP:
+                        logoY -= moveDelta;
+                        logoView.setTranslateY(logoY);
+                        break;
+                    case DOWN:
+                        logoY += moveDelta;
+                        logoView.setTranslateY(logoY);
+                        break;
+                    case LEFT:
+                        logoX -= moveDelta;
+                        logoView.setTranslateX(logoX);
+                        break;
+                    case RIGHT:
+                        logoX += moveDelta;
+                        logoView.setTranslateX(logoX);
+                        break;
+                    default:
+                        break;
+                }
+                
+                // Update status
+                if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.DOWN || 
+                    e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.RIGHT) {
+                    updateStatus("Logo moved to: " + logoX + ", " + logoY);
+                }
+            }
+        });
+
+        // Make mainPane focusable to receive key events
+        mainPane.setFocusTraversable(true);
+
+        // Request focus when a movement radio button is selected
+        moveWithArrowsRadio.setOnAction(e -> mainPane.requestFocus());
+        moveWithMouseRadio.setOnAction(e -> mainPane.requestFocus());
+        // Display option radio buttons event
+        
+        
+        // ListView selection event
+        methodCategoryListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                if (newVal.equals("Insert Methods") && methodsComboBox.getItems() != insertMethodsNames) {
+                    methodsComboBox.setItems(insertMethodsNames);
+                    methodsComboBox.getSelectionModel().selectFirst();
+                } else if (newVal.equals("Delete Methods") && methodsComboBox.getItems() != deleteMethodNames) {
+                    methodsComboBox.setItems(deleteMethodNames);
+                    methodsComboBox.getSelectionModel().selectFirst();
+                } else if (newVal.equals("Print Methods") && methodsComboBox.getItems() != printMethodNames) {
+                    methodsComboBox.setItems(printMethodNames);
+                    methodsComboBox.getSelectionModel().selectFirst();
+                } else if (newVal.equals("Traversal Methods") && methodsComboBox.getItems() != traversalMethodNames) {
+                    methodsComboBox.setItems(traversalMethodNames);
+                    methodsComboBox.getSelectionModel().selectFirst();
+                }
+                // Reset visibility of fields
+                elementBox.setVisible(false);
+                indexBox.setVisible(false);
+                endIndexBox.setVisible(false);
+                insertBox.setVisible(false);
+                sumBox.setVisible(false);
+                mainTextBox.setVisible(true);
+                
+                updateStatus("Selected category: " + newVal);
+                addToLog("Category selected: " + newVal);
+            }
+        });
+        
+        // ComboBox selection event
+        methodsComboBox.setOnAction(event -> {
+            String selectedMethod = methodsComboBox.getValue();
+            if (selectedMethod != null && 
+                !selectedMethod.equals("Insert Methods (Select one)") && 
+                !selectedMethod.equals("Delete Methods (Select one)") &&
+                !selectedMethod.equals("Print Methods (Select one)") &&
+                !selectedMethod.equals("Traversal Methods (Select one)")) {
+                
+                // Show/hide fields based on method requirements
+                updateFieldVisibility(selectedMethod, elementBox, indexBox, endIndexBox, insertBox);
+                updateStatus("Selected method: " + selectedMethod);
+                addToLog("Method selected: " + selectedMethod);
+            } else {
+                // Reset all field visibility
+                elementBox.setVisible(false);
+                indexBox.setVisible(false);
+                endIndexBox.setVisible(false);
+                insertBox.setVisible(false);
+                sumBox.setVisible(false);
+                mainTextBox.setVisible(true);
+            }
+        });
+        
+
+        
+        // Execute button action
+        executeButton.setOnAction(e -> {
+            String selectedMethod = methodsComboBox.getValue();
+            if (selectedMethod == null) {
+                showError("Please select a method to execute");
+                return;
+            }
+            
+            if (selectedMethod.equals("Insert Methods (Select one)") || 
+                selectedMethod.equals("Delete Methods (Select one)") ||
+                selectedMethod.equals("Print Methods (Select one)") ||
+                selectedMethod.equals("Traversal Methods (Select one)")) {
+                showError("Please select a specific method to execute");
+                return;
+            }
+            
+             
+            // Special case for Sum Number
+            if (!selectedMethod.equals("Sum Number") && mainText.getText().isEmpty()) {
+                showError("Please enter and confirm the text to modify");
+                return;
+            }
+            
+            
+            
+            executeSelectedMethod(selectedMethod);
+        });
+        
+       
+
+        // تطبيق الوضع المظلم إذا كان مفعلاً
+        
+        darkModeCheckBox.setSelected(false);
+        applyDarkMode(mainPane, false);
+
+        // تحديث معالج حدث خانة الاختيار للوضع المظلم
+        darkModeCheckBox.setOnAction(e -> {
+            boolean isDark = darkModeCheckBox.isSelected();
+            applyDarkMode(mainPane, isDark);
+        });
+
+
+        // Assemble the main layout
+        mainPane.setTop(topPane);
+        mainPane.setLeft(leftPane);
+        mainPane.setCenter(centerPane);
+        mainPane.setBottom(bottomPane);
+
+        // Display the scene
+        Scene scene = new Scene(mainPane, 900, 700);
+        primaryStage.setTitle("Advanced Text Editor");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        
+        // Initial update for log
+        addToLog("Application started");
+        updateStatus("Ready");
+    }
+    
+    private void resetFields() {
+        mainText.clear();
+        elementField.clear();
+        indexField.clear();
+        endIndexField.clear();
+        insertField.clear();
+        resultField.clear();
+        sumFirstNumberField.clear();
+        sumScoendNumberField.clear();
+        methodsComboBox.getSelectionModel().clearSelection();
+        methodCategoryListView.getSelectionModel().select(null);
+        
+        // Reset visibility
+        HBox mainTextBox = (HBox) mainText.getParent();
+        mainTextBox.setVisible(true);
+        
+        HBox elementBox = (HBox) elementField.getParent();
+        HBox indexBox = (HBox) indexField.getParent();
+        HBox endIndexBox = (HBox) endIndexField.getParent();
+        HBox insertBox = (HBox) insertField.getParent();
+        HBox sumBox = (HBox) sumFirstNumberField.getParent();
+        
+        elementBox.setVisible(false);
+        indexBox.setVisible(false);
+        endIndexBox.setVisible(false);
+        insertBox.setVisible(false);
+        sumBox.setVisible(false);
+        
+        addToLog("All fields reset");
+    }
+    
+    private void updateStatus(String message) {
+        statusText.setText(message);
+    }
+    
+    private void addToLog(String message) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String timestamp = dateFormat.format(new Date());
+        
+        operationLog.append("[").append(timestamp).append("] ").append(message).append("\n");
+        logTextArea.setText(operationLog.toString());
+        
+        // Auto-scroll to bottom
+        logTextArea.positionCaret(logTextArea.getText().length());
+    }
+    
+    private void updateFieldVisibility(String methodName, HBox elementBox, HBox indexBox, HBox endIndexBox, HBox insertBox) {
+        // Reset field labels to default
+        lbElement.setText("Element to search for:");
+        lbInsert.setText("Text to insert:");
+        lbIndex.setText("Index position:");
+        lbEndIndex.setText("End index position:");
+        
+        // Get reference to sumBox and mainTextBox
+        HBox sumBox = (HBox) sumFirstNumberField.getParent();
+        HBox mainTextBox = (HBox) mainText.getParent();
+        
+        // Special case for Sum Number
+        if (methodName.equals("Sum Number")) {
+            sumBox.setVisible(true);
+            mainTextBox.setVisible(false);
+            elementBox.setVisible(false);
+            indexBox.setVisible(false);
+            endIndexBox.setVisible(false);
+            insertBox.setVisible(false);
+            return;
+        } else {
+            sumBox.setVisible(false);
+            mainTextBox.setVisible(true);
+        }
+        
+        // Determine required fields for each method type
+        boolean needsElement = false;
+        boolean needsIndex = false;
+        boolean needsEndIndex = false;
+        boolean needsInsert = false;
+        
+        // Check which category the method belongs to
+        boolean isInsertMethod = methodName.toLowerCase().contains("insert") && !methodsComboBox.getItems().get(0).equals("Print Methods (Select one)") && !methodsComboBox.getItems().get(0).equals("Traversal Methods (Select one)");
+        boolean isPrintMethod = methodsComboBox.getItems().get(0).equals("Print Methods (Select one)");
+        boolean isTraversalMethod = methodsComboBox.getItems().get(0).equals("Traversal Methods (Select one)");
+        
+        if (isInsertMethod) {
+            // All insert methods need text to insert
+            needsInsert = true;
+            
+            // Methods that need element field
+            if (methodName.contains("specific element") || 
+                methodName.contains("occurrences of element")) {
+                needsElement = true;
+            }
+            
+            // Methods that need index field
+            if (methodName.contains("specific index")) {
+                needsIndex = true;
+            }
+        } else if (isPrintMethod) {
+            // Print methods
+            if (methodName.equals("Print character at specific index")) {
+                needsIndex = true;
+            } else if (methodName.equals("Print text between indices")) {
+                needsIndex = true;
+                needsEndIndex = true;
+            } else if (methodName.contains("occurrence")) {
+                needsElement = true;
+            }
+        } else if (isTraversalMethod) {
+            // Traversal methods
+            if (methodName.equals("Search for substring")) {
+                needsElement = true;
+            } else if (methodName.equals("Update by index range")) {
+                needsIndex = true;
+                needsEndIndex = true;
+                needsInsert = true;
+            } else if (methodName.equals("Update first occurrence") || 
+                       methodName.equals("Update all occurrences")) {
+                needsElement = true;
+                needsInsert = true;
+            }
+        } else {
+            // Delete methods
+            if (methodName.contains("specific element") || 
+                methodName.contains("occurrences of element")) {
+                needsElement = true;
+                lbElement.setText("Element to delete:");
+            }
+            
+            if (methodName.equals("Delete character at specific index from beginning") || 
+                methodName.equals("Delete character at specific index from end") ||
+                methodName.equals("Delete character at any index")) {
+                needsIndex = true;
+            }
+            
+            if (methodName.equals("Delete from start index to end index")) {
+                needsIndex = true;
+                needsEndIndex = true;
+            }
+            
+            if (methodName.equals("Delete from first char to second char")) {
+                needsElement = true;
+                lbElement.setText("First character:");
+                needsInsert = true;
+                lbInsert.setText("Second character:");
+            }
+        }
+        
+        // Update field visibility based on needs
+        elementBox.setVisible(needsElement);
+        indexBox.setVisible(needsIndex);
+        endIndexBox.setVisible(needsEndIndex);
+        insertBox.setVisible(needsInsert);
+    }
+    
+    private void executeSelectedMethod(String methodName) {
+        try {
+            String result = "";
+            String original = mainText.getText();
+            
+            // Setup parameters
+            String element = elementField.getText();
+            String insertText = insertField.getText();
+            int index = -1;
+            int endIndex = -1;
+            
+            // Parse indices if they exist
+            try {
+                if (!indexField.getText().isEmpty()) {
+                    index = Integer.parseInt(indexField.getText());
+                }
+                
+                if (!endIndexField.getText().isEmpty()) {
+                    endIndex = Integer.parseInt(endIndexField.getText());
+                }
+            } catch (NumberFormatException ex) {
+                showError("Please enter valid numbers for indices");
+                return;
+            }
+            
+            // Handle insert methods
+            if (methodsComboBox.getItems().get(0).equals("Insert Methods (Select one)")) {
+                switch (methodName) {
+                    case "Insert at end of string":
+                        result = a.insertLast(insertText);
+                        break;
+                    case "Insert before last":
+                        result = a.insertBeforeLast(insertText);
+                        break;
+                    case "Insert before & after last":
+                        result = a.insertBeforeAndAfterLast(insertText);
+                        break;
+                    case "Insert at beginning of string":
+                        result = a.insertFirst(insertText);
+                        break;
+                    case "Insert after first":
+                        result = a.insertAfterFirst(insertText);
+                        break;
+                    case "Insert before & after first":
+                        result = a.insertBeforeAndAfterFirst(insertText);
+                        break;
+                    case "Insert after specific element":
+                        result = a.insertAfterElement(element, insertText);
+                        break;
+                    case "Insert after all occurrences of element":
+                        result = a.insertAfterAllElement(element, insertText);
+                        break;
+                    case "Insert before specific element":
+                        result = a.insertBeforeElement(element, insertText);
+                        break;
+                    case "Insert before all occurrences of element":
+                        result = a.insertBeforeAllElement(element, insertText);
+                        break;
+                    case "Insert before & after specific element":
+                        result = a.insertBeforeAndAfterElement(element, insertText);
+                        break;
+                    case "Insert before & after all occurrences of element":
+                        result = a.insertBeforeAndAfterAllElement(element, insertText);
+                        break;
+                    case "Insert at specific index from beginning":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = a.insertElementWithStartingFirstIndex(index, insertText);
+                        break;
+                    case "Insert at specific index from end":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = a.insertElementWithStartingLastIndex(index, insertText);
+                        break;
+                    default:
+                        showError("Invalid insert method");
+                        return;
+                }
+            }
+            // Handle delete methods
+            else if (methodsComboBox.getItems().get(0).equals("Delete Methods (Select one)")) {
+                switch (methodName) {
+                    case "Delete first character":
+                        result = a.deleteFirstChar();
+                        break;
+                    case "Delete character after first":
+                        result = a.deleteAfterFirstChar();
+                        break;
+                    case "Delete all after first character":
+                        result = a.deleteAllAfterFirstChar();
+                        break;
+                    case "Delete last character":
+                        result = a.deleteLastChar();
+                        break;
+                    case "Delete character before last":
+                        result = a.deleteBeforeLastChar();
+                        break;
+                    case "Delete all before last character":
+                        result = a.deleteAllBeforeLastChar();
+                        break;
+                    case "Delete specific element":
+                        result = a.deleteElement(element);
+                        break;
+                    case "Delete all occurrences of element":
+                        result = a.deleteAllElement(element);
+                        break;
+                    case "Delete after specific element":
+                        result = a.deleteAfterElement(element);
+                        break;
+                    case "Delete after all occurrences of element":
+                        result = a.deleteAfterAllElement(element);
+                        break;
+                    case "Delete all after specific element":
+                        result = a.deleteAllAfterElement(element);
+                        break;
+                    case "Delete before specific element":
+                        result = a.deleteBeforeElement(element);
+                        break;
+                    case "Delete before all occurrences of element":
+                        result = a.deleteBeforeAllElement(element);
+                        break;
+                    case "Delete all before specific element":
+                        result = a.deleteAllBeforeElement(element);
+                        break;
+                    case "Delete before & after specific element":
+                        result = a.deleteBeforeAndAfterElement(element);
+                        break;
+                    case "Delete before & after all occurrences of element":
+                        result = a.deleteBeforeAndAfterAllElement(element);
+                        break;
+                    case "Delete character at specific index from beginning":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = a.DeleteCharWithStartingFirstIndex(index);
+                        break;
+                    case "Delete character at specific index from end":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = a.deleteCharWithLastIndex(index);
+                        break;
+                    case "Delete character at any index":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = a.deleteCharWithAnyIndex(index);
+                        break;
+                    case "Delete from start index to end index":
+                        if (index < 0 || endIndex < 0) {
+                            showError("Indices must be non-negative numbers");
+                            return;
+                        }
+                        result = a.deleteStartsIndexToLast(index, endIndex);
+                        break;
+                    case "Delete from first char to second char":
+                        if (element == null || insertText == null || element.length() != 1 || insertText.length() != 1) {
+                            showError("Please provide two single characters");
+                            return;
+                        }
+                        result = a.deleteStartsCharToChar(element.charAt(0), insertText.charAt(0));
+                        break;
+                    case "Delete all digits":
+                        result = a.deleteAllDigits();
+                        break;
+                    case "Delete all letters":
+                        result = a.deleteAllLetters();
+                        break;
+                    case "Delete all except digits and letters":
+                        result = a.deleteAllCharExceptDigitsAndLetters();
+                        break;
+                    case "Delete all (clear)":
+                        result = a.deleteAll();
+                        break;
+                    default:
+                        showError("Invalid delete method");
+                        return;
+                }
+            }
+
+            // Handle print methods
+            else if (methodsComboBox.getItems().get(0).equals("Print Methods (Select one)")) {
+                switch (methodName) {
+                    case "Print first letter":
+                        result = String.valueOf(a.printFirstLetter());  // char → String
+                        break;
+                    case "Print first word":
+                        result = a.printFirstWord();  // String
+                        break;
+                    case "Print first sentence":
+                        result = a.printFirstSentence();  // String
+                        break;
+                    case "Print last letter":
+                        result = String.valueOf(a.printLastLetter());  // char → String
+                        break;
+                    case "Print last word":
+                        result = a.printLastWord();  // String
+                        break;
+                    case "Print last sentence":
+                        result = a.printLastSentence();  // String
+                        break;
+                    case "Print size":
+                        result = String.valueOf(a.printSize());  // int → String
+                        break;
+                    case "Print capacity":
+                        result = String.valueOf(a.printCapacity());  // int → String
+                        break;
+                    case "Print character at specific index":
+                        if (index < 0) {
+                            showError("Index must be a non-negative number");
+                            return;
+                        }
+                        result = String.valueOf(a.printChar(index));  // char → String
+                        break;
+                    case "Print text between indices":
+                        if (index < 0 || endIndex < 0) {
+                            showError("Indices must be non-negative numbers");
+                            return;
+                        }
+                        result = a.PrintElement(index, endIndex);  // String
+                        break;
+                    case "Print index of first occurrence":
+                        result = String.valueOf(a.printIndexOfFirstElement(element));  // int → String
+                        break;
+                    case "Print index of last occurrence":
+                        result = String.valueOf(a.printIndexOfLastElement(element));  // int → String
+                        break;
+                    case "Print indices of all occurrences":
+                        result = Arrays.toString(a.printIndexOfAllElement(element));  // int[] → String
+                        break;
+                    default:
+                        showError("Invalid print method");
+                        return;
+                }
+            }
+
+
+            // Handle traversal methods
+            else if (methodsComboBox.getItems().get(0).equals("Traversal Methods (Select one)")) {
+                switch (methodName) {
+                    case "Convert words to array":
+                        result = Arrays.toString(a.convertWordsToArray());
+                        break;
+                    case "Convert letters to array":
+                        result = Arrays.toString(a.convertLettersToArray());
+                        break;
+                    case "Shuffle words":
+                        result = a.shuffleWords();
+                        break;
+                    case "Shuffle letters":
+                        result = a.shuffleLetters();
+                        break;
+                    case "Reverse content":
+                        result = a.reverse();
+                        break;
+                    case "Sort letters ascending":
+                        result = a.sortLettersAsc();
+                        break;
+                    case "Sort letters descending":
+                        result = a.sortLettersDesc();
+                        break;
+                    case "Search for substring":
+                        result = Boolean.toString(a.search(element));
+                        break;
+                    case "Sum Number":
+                        try {
+                            double num1 = Double.parseDouble(sumFirstNumberField.getText());
+                            double num2 = Double.parseDouble(sumScoendNumberField.getText());
+                            result = String.valueOf(a.sum(num1, num2));
+                        } catch (NumberFormatException ex) {
+                            showError("Please enter valid numbers");
+                            return;
+                        }
+                        break;
+                    case "Update by index range":
+                        if (index < 0 || endIndex < 0) {
+                            showError("Indices must be non-negative numbers");
+                            return;
+                        }
+                        result = a.updateByIndex(index, endIndex, insertText);
+                        break;
+                    case "Update first occurrence":
+                         result = a.updateFirst(element, insertText);
+                        break;
+                    case "Update all occurrences":
+                        result = a.updateAll(element, insertText);
+                        break;
+                    default:
+                        showError("Invalid traversal method");
+                        return;
+                }
+            }
+            
+            // Update result field
+            resultField.setText(result);
+            
+            // Update log
+            addToLog("Method executed: " + methodName);
+            addToLog("Original: \"" + original + "\"");
+            addToLog("Result: \"" + result + "\"");
+            
+            // Update status
+            updateStatus("Operation completed successfully");
+        } catch (Exception ex) {
+            showError("Error executing method: " + ex.getMessage());
+            addToLog("ERROR: " + ex.getMessage());
+        }
+    }
+    
+    private void showMessage(String message) {
+        Stage msgStage = new Stage();
+        msgStage.initModality(Modality.APPLICATION_MODAL);
+        msgStage.setTitle("Message");
+
+        VBox layout = new VBox(15);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
+
+        Label msgLabel = new Label(message);
+        Button okButton = new Button("OK");
+        okButton.setOnAction(e -> msgStage.close());
+
+        layout.getChildren().addAll(msgLabel, okButton);
+
+        Scene scene = new Scene(layout, 300, 150);
+        msgStage.setScene(scene);
+        msgStage.showAndWait();
+    }
+
+    
+    private void showError(String message) {
+        Stage errorStage = new Stage();
+        errorStage.initModality(Modality.APPLICATION_MODAL);
+        errorStage.setTitle("Error");
+
+        VBox layout = new VBox(15);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.CENTER);
+
+        Label errorLabel = new Label(message);
+        errorLabel.setTextFill(Color.RED);
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> errorStage.close());
+
+        layout.getChildren().addAll(errorLabel, closeButton);
+
+        Scene scene = new Scene(layout, 300, 150);
+        errorStage.setScene(scene);
+        errorStage.showAndWait();
+    }
+
+    
+    private void showHelp() {
+        Stage helpStage = new Stage();
+        helpStage.initModality(Modality.APPLICATION_MODAL);
+        helpStage.setTitle("Help");
+
+        VBox helpContent = new VBox(15);
+        helpContent.setPadding(new Insets(20));
+        helpContent.setAlignment(Pos.TOP_LEFT);
+
+        Text helpTitle = new Text("Advanced Text Editor - Help");
+        helpTitle.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+
+        Text helpText = new Text(
+            "This application allows you to perform various text operations.\n\n" +
+            "How to use:\n" +
+            "1. Select a method category from the list on the left.\n" +
+            "2. Choose a specific method from the dropdown menu.\n" +
+            "3. Enter your text in the 'Enter the text to Edit' field and click 'Confirm String'.\n" +
+            "4. Fill in any additional parameters required by the selected method.\n" +
+            "5. Click the 'Execute' button to perform the operation.\n" +
+            "6. The result will appear in the 'Result' field.\n\n" +
+            "Display Options:\n" +
+            "- Show All Operations\n" +
+            "- Show Result Only\n" +
+            "- Show Log\n\n" +
+            "Shortcuts:\n" +
+            "- Enter: Confirm text input\n" +
+            "- Ctrl+R: Reset all fields"
+        );
+        helpText.setFont(Font.font("Arial", 14));
+        helpText.setWrappingWidth(550);
+
+        Button closeButton = new Button("Close");
+        closeButton.setFont(Font.font("Arial", 14));
+        closeButton.setOnAction(e -> helpStage.close());
+
+        helpContent.getChildren().addAll(helpTitle, helpText, closeButton);
+
+        Scene helpScene = new Scene(helpContent, 600, 500);
+        helpStage.setScene(helpScene);
+        helpStage.showAndWait();
+    }
+
+    private void applyDarkMode(Pane root, boolean isDark) {
+        // ألوان محسنة للوضع المظلم
+        String darkBg = "#121212";            // خلفية داكنة أكثر
+        String darkSecondaryBg = "#1e1e1e";   // خلفية ثانوية للعناصر المضمنة
+        String darkTertiaryBg = "#2d2d2d";    // خلفية ثالثة للعناصر التفاعلية
+        String darkText = "#e1e1e1";          // نص فاتح مريح للعين
+        String darkAccent = "#4a90e2";        // لون التمييز الأزرق
+        String darkBorder = "#555555";        // لون الحدود
+        
+        // ألوان الوضع الفاتح
+        String lightBg = "#f5f5f5";
+        String lightSecondaryBg = "#ffffff";
+        String lightTertiaryBg = "#e8e8e8";
+        String lightText = "#212121";
+        String lightAccent = "#1a73e8";
+        String lightBorder = "#cccccc";
+        
+        // مدة التأثير الانتقالي
+        String transition = "-fx-transition: color 0.3s, background-color 0.3s;";
+        
+        if (isDark) {
+            // تطبيق الوضع المظلم على الخلفية الرئيسية
+            root.setStyle("-fx-background-color: " + darkBg + ";" + transition);
+            
+            // تطبيق النمط على عناصر النص
+            titleText.setFill(Color.web(darkText));
+            statusText.setFill(Color.web(darkText));
+            footerText.setFill(Color.web(darkText));
+            
+            // تطبيق النمط على جميع التسميات
+            applyStyleToLabels(root, "-fx-text-fill: " + darkText + ";" + transition);
+            
+            // تطبيق النمط على حقول النص
+            String textFieldStyle = "-fx-control-inner-background: " + darkTertiaryBg + "; " +
+                                   "-fx-text-fill: " + darkText + "; " +
+                                   "-fx-highlight-fill: " + darkAccent + "; " +
+                                   "-fx-border-color: " + darkBorder + ";" + transition;
+            
+            mainText.setStyle(textFieldStyle);
+            elementField.setStyle(textFieldStyle);
+            indexField.setStyle(textFieldStyle);
+            endIndexField.setStyle(textFieldStyle);
+            insertField.setStyle(textFieldStyle);
+            resultField.setStyle(textFieldStyle);
+            sumFirstNumberField.setStyle(textFieldStyle);
+            sumScoendNumberField.setStyle(textFieldStyle);
+            
+            // تطبيق النمط على منطقة النص
+            logTextArea.setStyle("-fx-control-inner-background: " + darkSecondaryBg + "; " +
+                                "-fx-text-fill: " + darkText + "; " +
+                                "-fx-border-color: " + darkBorder + ";" + transition);
+            
+            // تطبيق النمط على القوائم المنسدلة وقوائم العرض
+            String listStyle = "-fx-control-inner-background: " + darkTertiaryBg + "; " +
+                              "-fx-background: " + darkTertiaryBg + "; " +
+                              "-fx-text-fill: " + darkText + ";" + transition;
+            
+            methodsComboBox.setStyle(listStyle);
+            methodCategoryListView.setStyle(listStyle);
+            
+            // تطبيق النمط على الأزرار
+            String buttonStyle = "-fx-background-color: " + darkTertiaryBg + "; " +
+                                "-fx-text-fill: " + darkText + "; " +
+                                "-fx-border-color: " + darkBorder + ";" + transition;
+            
+            applyStyleToButtons(root, buttonStyle);
+            
+            // تطبيق النمط على الألواح الفرعية
+            applyStyleToPanes(root, "-fx-background-color: " + darkSecondaryBg + ";" + transition);
+            
+            // تطبيق النمط على خانات الاختيار وأزرار الراديو
+            String checkRadioStyle = "-fx-text-fill: " + darkText + ";" + transition;
+            applyStyleToCheckboxes(root, checkRadioStyle);
+            applyStyleToRadioButtons(root, checkRadioStyle);
+            
+            // تغيير لون العنوان والشريط السفلي
+            BorderPane mainPane = (BorderPane) root;
+            if (mainPane.getTop() instanceof Pane) {
+                ((Pane) mainPane.getTop()).setStyle("-fx-background-color: " + darkAccent + ";" + transition);
+            }
+            if (mainPane.getBottom() instanceof Pane) {
+                ((Pane) mainPane.getBottom()).setStyle("-fx-background-color: " + darkSecondaryBg + ";" + transition);
+            }
+            if (mainPane.getLeft() instanceof Pane) {
+                ((Pane) mainPane.getLeft()).setStyle("-fx-background-color: " + darkSecondaryBg + ";" + transition);
+            }
+            
+        } else {
+            // تطبيق الوضع الفاتح على الخلفية الرئيسية
+            root.setStyle("-fx-background-color: " + lightBg + ";" + transition);
+            
+            // تطبيق النمط على عناصر النص
+            titleText.setFill(Color.BLACK);
+            statusText.setFill(Color.DARKSLATEGRAY);
+            footerText.setFill(Color.DARKSLATEGRAY);
+            
+            // تطبيق النمط على جميع التسميات
+            applyStyleToLabels(root, "-fx-text-fill: " + lightText + ";" + transition);
+            
+            // إعادة تعيين حقول النص إلى النمط الافتراضي
+            String textFieldStyle = "-fx-control-inner-background: " + lightSecondaryBg + "; " +
+                                   "-fx-text-fill: " + lightText + "; " +
+                                   "-fx-highlight-fill: " + lightAccent + "; " +
+                                   "-fx-border-color: " + lightBorder + ";" + transition;
+            
+            mainText.setStyle(textFieldStyle);
+            elementField.setStyle(textFieldStyle);
+            indexField.setStyle(textFieldStyle);
+            endIndexField.setStyle(textFieldStyle);
+            insertField.setStyle(textFieldStyle);
+            resultField.setStyle(textFieldStyle);
+            sumFirstNumberField.setStyle(textFieldStyle);
+            sumScoendNumberField.setStyle(textFieldStyle);
+            
+            // إعادة تعيين منطقة النص
+            logTextArea.setStyle("-fx-control-inner-background: " + lightSecondaryBg + "; " +
+                                "-fx-text-fill: " + lightText + "; " +
+                                "-fx-border-color: " + lightBorder + ";" + transition);
+            
+            // إعادة تعيين القوائم المنسدلة وقوائم العرض
+            String listStyle = "-fx-control-inner-background: " + lightSecondaryBg + "; " +
+                              "-fx-background: " + lightSecondaryBg + "; " +
+                              "-fx-text-fill: " + lightText + ";" + transition;
+            
+            methodsComboBox.setStyle(listStyle);
+            methodCategoryListView.setStyle(listStyle);
+            
+            // إعادة تعيين الأزرار
+            String buttonStyle = "-fx-background-color: " + lightTertiaryBg + "; " +
+                                "-fx-text-fill: " + lightText + "; " +
+                                "-fx-border-color: " + lightBorder + ";" + transition;
+            
+            applyStyleToButtons(root, buttonStyle);
+            
+            // إعادة تعيين الألواح الفرعية
+            applyStyleToPanes(root, "-fx-background-color: " + lightSecondaryBg + ";" + transition);
+            
+            // إعادة تعيين خانات الاختيار وأزرار الراديو
+            String checkRadioStyle = "-fx-text-fill: " + lightText + ";" + transition;
+            applyStyleToCheckboxes(root, checkRadioStyle);
+            applyStyleToRadioButtons(root, checkRadioStyle);
+            
+            // إعادة تعيين لون العنوان والشريط السفلي
+            BorderPane mainPane = (BorderPane) root;
+            if (mainPane.getTop() instanceof Pane) {
+                ((Pane) mainPane.getTop()).setStyle("-fx-background-color: " + lightAccent + ";" + transition);
+            }
+            if (mainPane.getBottom() instanceof Pane) {
+                ((Pane) mainPane.getBottom()).setStyle("-fx-background-color: " + lightTertiaryBg + ";" + transition);
+            }
+            if (mainPane.getLeft() instanceof Pane) {
+                ((Pane) mainPane.getLeft()).setStyle("-fx-background-color: " + lightSecondaryBg + ";" + transition);
+            }
+        }
+        
+        // تحديث حالة زر تنفيذ العملية لتتناسب مع الوضع الحالي
+        updateExecuteButtonStyle(isDark);
+        
+    }
+
+    // دوال مساعدة لتطبيق النمط على مجموعات من العناصر
+    private void applyStyleToLabels(Pane root, String style) {
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof Label) {
+                ((Label) node).setStyle(style);
+            } else if (node instanceof Pane) {
+                applyStyleToLabels((Pane) node, style);
+            }
+        }
+    }
+
+    private void applyStyleToButtons(Pane root, String style) {
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof Button && node != executeButton) { // تجنب تغيير نمط زر التنفيذ هنا
+                ((Button) node).setStyle(style);
+            } else if (node instanceof Pane) {
+                applyStyleToButtons((Pane) node, style);
+            }
+        }
+    }
+
+    private void applyStyleToPanes(Pane root, String style) {
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof GridPane || node instanceof HBox || node instanceof VBox) {
+                ((Pane) node).setStyle(style);
+            } else if (node instanceof Pane && node != root) {
+                ((Pane) node).setStyle(style);
+                applyStyleToPanes((Pane) node, style);
+            }
+        }
+    }
+
+    private void applyStyleToCheckboxes(Pane root, String style) {
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof CheckBox) {
+                ((CheckBox) node).setStyle(style);
+            } else if (node instanceof Pane) {
+                applyStyleToCheckboxes((Pane) node, style);
+            }
+        }
+    }
+
+    private void applyStyleToRadioButtons(Pane root, String style) {
+        for (javafx.scene.Node node : root.getChildren()) {
+            if (node instanceof RadioButton) {
+                ((RadioButton) node).setStyle(style);
+            } else if (node instanceof Pane) {
+                applyStyleToRadioButtons((Pane) node, style);
+            }
+        }
+    }
+
+    // تحديث نمط زر التنفيذ لإبرازه
+    private void updateExecuteButtonStyle(boolean isDark) {
+        if (isDark) {
+            executeButton.setStyle(
+                "-fx-background-color: #1a73e8; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-weight: bold; " +
+                "-fx-border-radius: 3; " +
+                "-fx-background-radius: 3; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1);"
+            );
+        } else {
+            executeButton.setStyle(
+                "-fx-background-color: #4285f4; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-weight: bold; " +
+                "-fx-border-radius: 3; " +
+                "-fx-background-radius: 3; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0.0, 0, 1);"
+            );
+        }
+        
+        // إضافة تأثيرات تفاعلية على الزر
+        executeButton.setOnMouseEntered(e -> {
+            if (isDark) {
+                executeButton.setStyle(
+                    "-fx-background-color: #4a90e2; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-border-radius: 3; " +
+                    "-fx-background-radius: 3; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 7, 0.0, 0, 2);"
+                );
+            } else {
+                executeButton.setStyle(
+                    "-fx-background-color: #5c9afe; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-border-radius: 3; " +
+                    "-fx-background-radius: 3; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 7, 0.0, 0, 2);"
+                );
+            }
+        });
+        
+        executeButton.setOnMouseExited(e -> {
+            if (isDark) {
+                executeButton.setStyle(
+                    "-fx-background-color: #1a73e8; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-border-radius: 3; " +
+                    "-fx-background-radius: 3; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1);"
+                );
+            } else {
+                executeButton.setStyle(
+                    "-fx-background-color: #4285f4; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-weight: bold; " +
+                    "-fx-border-radius: 3; " +
+                    "-fx-background-radius: 3; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0.0, 0, 1);"
+                );
+            }
+        });
+        
+    }
+
     public static void main(String[] args) {
+    	Application.launch(args);
         Scanner scanner = new Scanner(System.in);
         AllOperations ops = new AllOperations();
         File WriteTheDate = new File("WriteTheDate.txt");
@@ -88,6 +1579,8 @@ public class Test {
             System.out.println("Program terminated.");
         }
     }
+
+
 
     private static void handleAddingOperations(Scanner scanner, AllOperations ops) {
         System.out.println("\nAddition operations:");
@@ -639,12 +2132,7 @@ public class Test {
                     String oldValue = scanner.nextLine();
                     System.out.print("Enter new value: ");
                     String newValue = scanner.nextLine();
-                    boolean success = ops.updateFirst(oldValue, newValue);
-                    if (success) {
-                        System.out.println("First occurrence updated successfully.");
-                    } else {
-                        throw new NoSuchElementException("Value '" + oldValue + "' not found in text");
-                    }
+                    String success = ops.updateFirst(oldValue, newValue);
                     break;
                 case 11:
                     System.out.print("Enter old value: ");
@@ -749,4 +2237,6 @@ public class Test {
             return null;
         }
     }
+
+	
 }
