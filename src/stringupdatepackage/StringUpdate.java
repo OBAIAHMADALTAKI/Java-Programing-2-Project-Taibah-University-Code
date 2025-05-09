@@ -2,6 +2,7 @@ package stringupdatepackage;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -119,16 +120,17 @@ public abstract class StringUpdate implements SaveFile {
         return;
     }
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line); 
+    try (Scanner scanner = new Scanner(file)) {
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            System.out.println(line);
         }
-    } catch (IOException e) {
+    } catch (FileNotFoundException e) {
         System.out.println("An error occurred while reading the file.");
         e.printStackTrace();
     }
 }
+
  
 
     public void PrintList() {
