@@ -102,7 +102,7 @@ AM_PM: PM
 ### Clone the repository
 
 ```bash
-git clone https://github.com/OBAIAHMADALTAKI/Java-Programing-2-Project-Taibah-University-Code.git
+git clone https://github.com/obaicodes/Java-Programing-2-Project-Taibah-University-Code.git
 cd Java-Programing-2-Project-Taibah-University-Code
 ```
 
